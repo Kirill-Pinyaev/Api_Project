@@ -4,16 +4,8 @@ import random
 import time
 
 
-maxim = 1000
-minim = 1
-numbers = [i for i in range(1000)]
-middle = (minim + maxim) // 2
-number_game = False
-user_find_h = True
-
-
 def main():
-    global maxim, middle, minim, numbers, number_game
+    global maxim, middle, minim, numbers, number_game, numb_game_find, numb_game_pr, user_find_h
     flag = False
 
     vk_session = vk_api.VkApi(
@@ -37,8 +29,9 @@ def main():
                                      "Игры",
                              random_id=random.randint(0, 2 ** 64))
 
-        if event.type == VkBotEventType.MESSAGE_NEW and 'игр' in event.obj.message[
-            'text'].lower() and flag:
+        if event.type == VkBotEventType.MESSAGE_NEW and 'игр' in \
+                event.obj.message[
+                    'text'].lower() and flag:
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Можем поиграть в:\n"
                                      "Камень ножницы бумага(1)\n"
@@ -59,46 +52,88 @@ def main():
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
             'text'] == '2' and flag:
+
             number_game = True
+            numb_gm_polz = False
+            numb_gm_ii = False
+            numb_gm = NumberGame()
+
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Название: Угадай число\n"
-                             "Один из нас - Я или ВЫ - загадывает число от 1 до 1000.\n"
-                             "Другой начинает начинает угадывать, называя числа, "
-                             "получая в ответ фразы 'больше' или 'меньше'.\n"
-                             "'Меньше' - загаданное число меньше Вашего.\n"
-                             "'Больше' - загаданное число больше Вашего.\n"
-                             "Кто загадывает число: Я или ВЫ?",
+                                     "Один из нас - Я или ВЫ - загадывает число от 1 до 999.\n"
+                                     "Другой начинает начинает угадывать, называя числа, "
+                                     "получая в ответ фразы 'больше' или 'меньше'.\n"
+                                     "'Меньше' - загаданное число меньше Вашего.\n"
+                                     "'Больше' - загаданное число больше Вашего.\n"
+                                     "Кто загадывает число: Я или ВЫ?",
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
             'text'].lower() == 'я' and flag and number_game:
 
-                text = number_game_answer(event.obj.message['text'].lower())
+            numb_gm_polz = True
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-
-        if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].lower() in ['больш', 'меньш', 'равн'] and flag and number_game:
-
-            text = number_game_answer(event.obj.message['text'].lower())
+            text = "Хорошо. Загадывайте число.\n" \
+                   "Загадали? ДА / НЕТ"
 
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message=text,
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].lower() == 'вы' and flag and number_game and user_find_h:
-                text = number_game_answer(event.obj.message['text'].lower())
+            'text'].lower() in ['нет', 'да'] and flag and number_game and numb_gm_polz:
+            if event.obj.message['text'].lower() == 'нет':
+                text = "Ладно, я могу подождпть.\n" \
+                       "А теперь загадали? ДА / НЕТ"
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
                                  random_id=random.randint(0, 2 ** 64))
 
+            else:
+                text = "Хорошо. Начинаю угадывать\n"
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=text,
+                                     random_id=random.randint(0, 2 ** 64))
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=numb_gm.number_game_st(),
+                                 random_id=random.randint(0, 2 ** 64))
+
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].isdigit() and flag and number_game and not user_find_h:
-            text = number_game_answer(event.obj.message['text'].lower())
+            'text'].lower() in ['больше', 'меньше', 'равно'] and flag \
+                and number_game and numb_gm_polz:
+            if numb_gm.minim < numb_gm.maxim - 1:
+
+                text = numb_gm.number_game_func\
+                    (event.obj.message['text'].lower())
+                print(numb_gm_polz)
+                print(text)
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+            else:
+                text = "Должно быть, Вы ошиблись.\n" \
+          "Такого числа нет в диапазоне от 1 до 1000"
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+        if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
+            'text'].lower() == 'вы' and flag and number_game:
+
+            numb_gm_ii = True
+
+            text = numb_gm.number_game_func(event.obj.message['text'].lower())
+
+            vk.messages.send(user_id=event.obj.message['from_id'],
+                             message=text,
+                             random_id=random.randint(0, 2 ** 64))
+
+        if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
+            'text'].isdigit() and flag and number_game and numb_gm_ii:
+            text = numb_gm.number_game_func(event.obj.message['text'].lower())
 
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message=text,
@@ -110,58 +145,39 @@ def main():
                              random_id=random.randint(0, 2 ** 64))
 
 
-def number_game_answer(answ):
-    global maxim, middle, minim, numbers, number_game, user_find_h
-    err = "Должно быть, Вы ошиблись. Такого\n " \
-                   "числа нет в диапазоне от 1 до 1000"
-    if answ == 'я':
-        text = "Хорошо. Загадывайте число.\n" \
-            f"Число {numbers[middle]} БОЛЬШЕ, \n" \
-               "МЕНЬШЕ или РАВНО вашему числу?"
-    elif answ == 'вы':
-        text = "Хорошо. До какого числа я могу загадать?\n"\
-               "Введите максимальное число."
-    elif answ in ['больш', 'меньш', 'равн']:
-        if answ == 'больш':
-            if minim <= maxim - 1:
-                maxim, middle = middle, (minim + maxim) // 2
-                text = f"Число {numbers[middle]} БОЛЬШЕ, \n"\
-                           "МЕНЬШЕ или РАВНО вашему числу?"
+class NumberGame:
+    def __init__(self):
+        self.maxim = 1000
+        self.minim = 0
+        self.middle = (self.minim + self.maxim) // 2
+        self.numbers = [i for i in range(1000)]
+
+    def number_game_func(self, answ):
+        if answ == "меньше" or answ == "больше":
+            if answ == "меньше":
+                self.minim = self.middle
+
             else:
-                text = err
-        elif answ == 'меньш':
-            minim, middle = middle, (minim + maxim) // 2
-            if minim < maxim - 1:
-                text = f"Число {numbers[middle]} БОЛЬШЕ, \n"\
-                           "МЕНЬШЕ или РАВНО вашему числу?"
+                self.maxim = self.middle
+
+            self.middle = (self.minim + self.maxim) // 2
+
+            if self.minim < self.maxim - 1:
+                return f"Число {self.numbers[self.middle]} БОЛЬШЕ, МЕНЬШЕ " \
+                    f"или РАВНО вашему числу?"
             else:
-                text = err
-        elif answ == 'равн':
-            text = f"Ура! У меня получилось !\n"\
-                           f"Ваше число : {numbers[middle]}"
-            number_game = False
+                return "Должно быть, Вы ошиблись. Такого числа нет в " \
+               "диапазоне от 1 до 1000"
 
-            maxim = 1000
-            minim = 1
-            numbers = [i for i in range(1000)]
-            middle = (minim + maxim) // 2
-    elif answ.isdigit():
-        if user_find_h:
-            ii_numb = random.randint(0, int(int(answ)))
-            text = "Всё, я загадал число\n"\
-                   "Можете угадывать"
-            user_find_h = False
+        elif answ == "равно":
+            return f"Ура! У меня получилось !\n " \
+                    f"Ваше число : {self.numbers[self.middle]}"
+        return "Должно быть, Вы ошиблись. Такого числа нет в " \
+               "диапазоне от 1 до 1000"
 
-        if int(answ) > ii_numb and not user_find_h:
-            text = "Не угадали. Мое число меньше."
-        elif int(answ) < ii_numb and not user_find_h:
-            text = "Не угадали. Мое число больше."
-        else:
-            text = f"Ура ! Вы угадали, мое число {ii_numb}."
-    else:
-        text = "Я Вас не понимаю"
-
-    return text
+    def number_game_st(self):
+        return f"Число {self.numbers[self.middle]} БОЛЬШЕ, МЕНЬШЕ " \
+            f"или РАВНО вашему числу?"
 
 
 if __name__ == '__main__':
