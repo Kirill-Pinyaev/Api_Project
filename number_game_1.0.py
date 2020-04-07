@@ -4,6 +4,7 @@ import random
 import time
 # from chernovic import NumberGame
 
+print(random.randint(1, 5))
 
 def main():
     flag = False
