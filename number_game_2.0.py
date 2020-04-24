@@ -648,7 +648,7 @@ def letters_slova(word, proverka=False):
     if proverka:
         return word[0]
     else:
-        if word[-2:] == 'ая' or word[-2:] == 'ый' or word[-2:] == 'ые':
+        if word[-2:] == 'ая' or word[-2:] == 'ый' or word[-2:] == 'ые' or not word.isalpha():
             return '0'
         elif word[-1] == 'й' or word[-1] == 'ы' or word[-1] == 'ъ' or word[-1] == 'ь':
             return word[-2]
@@ -696,6 +696,7 @@ def rock_paper_scissors(vk, event):
 def slova(vk):
     slova_flag = False
     slova_flag1 = True
+    sp_slov_user = []
     slovarik_slov_copy = slovarik_slov.copy()
     vk.messages.send(user_id=id_user,
                      message='Вы начинайте',
@@ -703,10 +704,12 @@ def slova(vk):
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             if event.obj.message['text'].lower() == 'сдаюсь':
+                vk.messages.send(user_id=id_user,
+                                 message="Ура, Ура, Ура, я выиграл",
+                                 random_id=random.randint(0, 2 ** 64))
                 main(True, vk)
             else:
                 if slova_flag:
-                    print(i)
                     if letters_slova(i) != letters_slova(event.obj.message['text'].lower(), True):
                         vk.messages.send(user_id=id_user,
                                          message="Слово не подходит",
@@ -716,12 +719,18 @@ def slova(vk):
                         slova_flag1 = True
                 if slova_flag1:
                     letter = letters_slova(event.obj.message['text'].lower())
-                    if letter == '0':
+                    if letter == '0' or event.obj.message['text'].lower() in sp_slov_user:
                         vk.messages.send(user_id=id_user,
-                                         message="Это Прилагательное",
+                                         message="Слово не подходит",
                                          random_id=random.randint(0, 2 ** 64))
                     else:
-                        index =random.randint(0, len(slovarik_slov_copy[letter])+ 1)
+                        sp_slov_user.append(event.obj.message['text'].lower())
+                        if len(slovarik_slov_copy[letter]) == 0:
+                            vk.messages.send(user_id=id_user,
+                                             message="Я сдаюсь, вы выиграли",
+                                             random_id=random.randint(0, 2 ** 64))
+                            main(True, vk)
+                        index = random.randint(0, len(slovarik_slov_copy[letter]) - 1)
                         sl = slovarik_slov_copy[letter][index]
                         i = slovarik_slov_copy[letter].pop(index)
                         vk.messages.send(user_id=id_user,
