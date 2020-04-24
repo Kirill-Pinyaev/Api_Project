@@ -8,6 +8,7 @@ vk_session = vk_api.VkApi(
 longpoll = VkBotLongPoll(vk_session, '193318026')
 flag = False
 flag_play = False
+id_user = None
 
 
 def main(not_first=False, vk=None, event=None):
@@ -22,7 +23,7 @@ def main(not_first=False, vk=None, event=None):
         vk = vk_session.get_api()
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
             'text'].lower() == 'начать' and not flag:
-
+            id_user = event.obj.message['from_id']
             flag = True
 
             game_flag = False
@@ -69,7 +70,7 @@ def main(not_first=False, vk=None, event=None):
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
             'text'] == '1' and flag_play:
-            vk.messages.send(user_id=event.obj.message['from_id'],
+            vk.messages.send(user_id=id_user,
                              message="Сейчас пойдет отсчет до 5 и на цифре пять нужно отправить"
                                      "или камень или ножницы или бумага\n"
                                      "Памятка:\n"
@@ -273,8 +274,9 @@ def main(not_first=False, vk=None, event=None):
             kit.append(event.obj.message['text'])
             print(kit)
 
+
         elif event.type == VkBotEventType.MESSAGE_NEW and not flag:
-            vk.messages.send(user_id=event.obj.message['from_id'],
+            vk.messages.send(user_id=id_user,
                              message="Для начала работы напишите 'Начать'",
                              random_id=random.randint(0, 2 ** 64))
 
@@ -357,57 +359,55 @@ class NumberGameII:
                    f"Загадано число от 0 до {self.high}"
         return text
 
+def restart_game(vk, game_name):
+    vk.messages.send(user_id=id_user,
+                     message="Еще раз?",
+                     random_id=random.randint(0, 2 ** 64))
+    for event in longpoll.listen():
+        if event.type == VkBotEventType.MESSAGE_NEW and \
+                event.obj.message['text'].lower() == 'да':
+            game_name(vk, event)
+        elif  event.type == VkBotEventType.MESSAGE_NEW and \
+                event.obj.message['text'].lower() != 'да':
+            main(True, vk)
+
+
 def rock_paper_scissors(vk, event):
     sp = ['ножницы', 'камень', 'бумага']
     for i in range(1, 6):
-        vk.messages.send(user_id=event.obj.message['from_id'],
+        vk.messages.send(user_id=id_user,
                          message=f"{i}",
                          random_id=random.randint(0, 2 ** 64))
         time.sleep(1)
     slov = sp[random.randint(0, 2)]
-    vk.messages.send(user_id=event.obj.message['from_id'],
+    vk.messages.send(user_id=id_user,
                      message=slov,
                      random_id=random.randint(0, 2 ** 64))
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             if event.obj.message['text'].lower() == slov:
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message="Ничья\n"
-                                         "Еще раз?",
+                vk.messages.send(user_id=id_user,
+                                 message="Ничья\n",
                                  random_id=random.randint(0, 2 ** 64))
-                for event in longpoll.listen():
-                    if event.type == VkBotEventType.MESSAGE_NEW and \
-                            event.obj.message['text'].lower() == 'да':
-                        rock_paper_scissors(vk, event)
-                    main(True, vk, event)
+                restart_game(vk, rock_paper_scissors)
             elif (event.obj.message['text'].lower() == 'ножницы' and slov == 'бумага') or (
                     event.obj.message['text'].lower() == 'камень' and slov == 'ножницы') or (
                     event.obj.message['text'].lower() == 'бумага' and slov == 'камень'):
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message="Вы выиграли\n"
-                                         "Еще раз?",
+                vk.messages.send(user_id=id_user,
+                                 message="Вы выиграли\n",
                                  random_id=random.randint(0, 2 ** 64))
-                for event in longpoll.listen():
-                    if event.type == VkBotEventType.MESSAGE_NEW and \
-                            event.obj.message['text'].lower() == 'да':
-                        rock_paper_scissors(vk, event)
-                    main(True, vk, event)
+                restart_game(vk, rock_paper_scissors)
             elif (event.obj.message['text'].lower() == 'бумага' and slov == 'ножницы') or (
                     event.obj.message['text'].lower() == 'ножницы' and slov == 'камень') or (
                     event.obj.message['text'].lower() == 'камень' and slov == 'бумага'):
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message="Вы проиграли\n"
-                                         "Еще раз?",
+                vk.messages.send(user_id=id_user,
+                                 message="Вы проиграли\n",
                                  random_id=random.randint(0, 2 ** 64))
-                for event in longpoll.listen():
-                    if event.type == VkBotEventType.MESSAGE_NEW and \
-                            event.obj.message['text'].liwer() == 'да':
-                        rock_paper_scissors(vk, event)
-                    main(True, vk, event)
-            vk.messages.send(user_id=event.obj.message['from_id'],
+                restart_game(vk, rock_paper_scissors)
+            vk.messages.send(user_id=id_user,
                              message="Такого знака нет",
                              random_id=random.randint(0, 2 ** 64))
-            rock_paper_scissors(vk, event)
+            restart_game(vk, rock_paper_scissors)
 
 
 if __name__ == '__main__':
