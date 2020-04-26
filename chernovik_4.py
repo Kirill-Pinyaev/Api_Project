@@ -666,11 +666,11 @@ def main(not_first=False, vk=None, event=None):
             'text'] in ['1', '2', '3', '4'] and flag and weather_fl and not city_fl_pr and \
                 w_weather and (this_moment or certain_time))):
 
-            if event.obj.message['text'] == '1':
+            if event.obj.message['text'] == '1' and not certain_time:
                 if not this_moment:
                     this_moment = True
                 else:
-                    weather_cl = Weather(city, event.obj.message['text'], latt, long)
+                    weather_cl = Weather(city, this_moment, latt, long)
 
                     text = weather_cl.response_d('')
 
@@ -678,11 +678,13 @@ def main(not_first=False, vk=None, event=None):
                                      message=text,
                                      random_id=random.randint(0, 2 ** 64))
                     main(True, vk)
-            if event.obj.message['text'] == '2':
+            if (event.obj.message['text'] == '2') or (certain_time and event.obj
+                    .message['text'] in ['1', '2', '3', '4']):
                 if not certain_time:
+                    this_moment = False
                     certain_time = True
 
-                    weather_cl = Weather(city, event.obj.message['text'], latt,
+                    weather_cl = Weather(city, this_moment, latt,
                                          long)
 
                     text = weather_cl.response_d('')
@@ -693,15 +695,18 @@ def main(not_first=False, vk=None, event=None):
                     print("тут")
                 else:
                     print("снова тут")
-                    weather_cl = Weather(city, event.obj.message['text'], latt, long)
+                    weather_cl = Weather(city, this_moment, latt, long)
 
-                    text = weather_cl.response_d(event.obj.message['text'])
+                    text_1, text_2 = weather_cl.response_d(event.obj.message['text'])
+                    print(weather_cl.response_d(event.obj.message['text']))
 
                     vk.messages.send(user_id=event.obj.message['from_id'],
-                                     message=text,
+                                     message=text_1,
+                                     random_id=random.randint(0, 2 ** 64))
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=text_2,
                                      random_id=random.randint(0, 2 ** 64))
                     main(True, vk)
-
 
 
         elif event.type == VkBotEventType.MESSAGE_NEW and not flag:
@@ -899,8 +904,8 @@ def slova(vk):
 
 
 class Weather:
-    def __init__(self, city, ask, lat, lon):
-        self.question = ask
+    def __init__(self, city, now, lat, lon):
+        self.time = now
         self.city_fl = city
         self.lat = lat
         self.lon = lon
@@ -954,7 +959,7 @@ class Weather:
         if self.response:
             json_response = self.response.json()
 
-            if self.question == '1':
+            if self.time:
                 fact_w = json_response['fact']
 
                 text = f"Температура воздуха: {self.fact_d['temp'][0]} {fact_w['temp']}{self.fact_d['temp'][1]}\n" \
@@ -963,6 +968,7 @@ class Weather:
                     f"Атмосферное давление:  {self.fact_d['pressure_mm']} {fact_w['pressure_mm']}мм рт.ст.\n"\
                     f"Влажность воздуха:  {self.fact_d['humidity']} {fact_w['humidity']}%\n"\
                     f"Описание погоды:  {self.condition_d[fact_w['condition']][0]} {self.condition_d[fact_w['condition']][1]}\n"
+                return text
             else:
                 if time == '':
                     text = "Вы можете получить прогноз погоды на:\n"\
@@ -970,15 +976,27 @@ class Weather:
                            "День(2)\n"\
                            "Вечер(3)\n"\
                            "Ночь(4)\n"
-                elif time == '1':
-                    text = f"Прогноз на утро:"
-                elif time == '2':
-                    text = f"Прогноз на день:"
-                elif time == '3':
-                    text = f"Прогноз на вечер:"
-                elif time == '4':
-                    text = f"Прогноз на ночь:"
-            return text
+                    return text
+                else:
+                    if time == '1':
+                        fact_w = json_response['forecasts'][0]['parts']['morning']
+                        text_1 = f"Прогноз на утро:"
+                    elif time == '2':
+                        fact_w = json_response['forecasts'][0]['parts']['day']
+                        text_1 = f"Прогноз на день:"
+                    elif time == '3':
+                        fact_w = json_response['forecasts'][0]['parts']['evening']
+                        text_1 = f"Прогноз на вечер:"
+                    elif time == '4':
+                        fact_w = json_response['forecasts'][0]['parts']['night']
+                        text_1 = f"Прогноз на ночь:"
+                    text_2 = f"Температура воздуха: {self.fact_d['temp'][0]} {fact_w['temp_avg']}{self.fact_d['temp'][1]}\n" \
+                        f"Скорость ветра:  {self.fact_d['wind_speed']} {fact_w['wind_speed']}м/с\n" \
+                        f"Направление ветра:  {self.wind_d[fact_w['wind_dir']][1]} {self.wind_d[fact_w['wind_dir']][0]}\n" \
+                        f"Атмосферное давление:  {self.fact_d['pressure_mm']} {fact_w['pressure_mm']}мм рт.ст.\n" \
+                        f"Влажность воздуха:  {self.fact_d['humidity']} {fact_w['humidity']}%\n" \
+                        f"Описание погоды:  {self.condition_d[fact_w['condition']][0]} {self.condition_d[fact_w['condition']][1]}\n"
+                return text_1, text_2
         else:
             print("Ошибка выполнения запроса:")
             print(self.weather_request)
