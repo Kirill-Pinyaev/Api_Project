@@ -82,7 +82,7 @@ class Weather:
             print(toponym + 'err')
             print()
 
-Weather("Москва", "погода")
+Weather("Казань", "погода")
 # Weather("россия", "погода")
 # Weather("", "погода")
 # Weather("apple", "погода")

@@ -275,6 +275,8 @@ def main(not_first=False, vk=None, event=None):
         city_fl_pr = False   # идет поиск города
         w_weather = False  # выбраны "данные о погоде"
         w_time = False  # выбраны "данные о времени"
+        this_moment = False  # выбрана погода на "данный момент"
+        certain_time = False  # выбрана погода на "определенное время"
 
     for event in longpoll.listen():
         vk = vk_session.get_api()
@@ -294,6 +296,8 @@ def main(not_first=False, vk=None, event=None):
             city_fl_pr = False  # идет поиск города
             w_weather = False   # выбраны "данные о погоде"
             w_time = False   # выбраны "данные о времени"
+            this_moment = False   # выбрана погода на "данный момент"
+            certain_time = False   # выбрана погода на "определенное время"
 
             print(event)
             print('Новое сообщение:')
@@ -605,7 +609,7 @@ def main(not_first=False, vk=None, event=None):
                         long, latt, city = city_cl.search(city)
                         city_fl_pr = False
 
-                        text = f"Вы хотите получить данные о городе {city}}?\n"\
+                        text = f"Вы хотите получить данные о городе {city}?\n"\
                             "ДА или НЕТ\n"
 
                         vk.messages.send(user_id=event.obj.message['from_id'],
@@ -636,7 +640,7 @@ def main(not_first=False, vk=None, event=None):
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message['text']\
-                in ['1', '2'] and flag and weather_fl and not city_fl_pr:
+                in ['1', '2'] and flag and weather_fl and not city_fl_pr and not w_weather and not w_time:
             if event.obj.message['text'] == "1":
                 w_weather = True
 
@@ -656,10 +660,48 @@ def main(not_first=False, vk=None, event=None):
                              message=text,
                              random_id=random.randint(0, 2 ** 64))
 
-        if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] in ['1', '2'] and flag and weather_fl and not city_fl_pr and w_weather:
+        if event.type == VkBotEventType.MESSAGE_NEW and ((event.obj.message[
+            'text'] in ['1', '2'] and flag and weather_fl and not city_fl_pr and \
+                w_weather and not this_moment and not certain_time) or (event.obj.message[
+            'text'] in ['1', '2', '3', '4'] and flag and weather_fl and not city_fl_pr and \
+                w_weather and (this_moment or certain_time))):
 
-            weather_cl = Weather(city, event.obj.message['text'], latt, long)
+            if event.obj.message['text'] == '1':
+                if not this_moment:
+                    this_moment = True
+                else:
+                    weather_cl = Weather(city, event.obj.message['text'], latt, long)
+
+                    text = weather_cl.response_d('')
+
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=text,
+                                     random_id=random.randint(0, 2 ** 64))
+                    main(True, vk)
+            if event.obj.message['text'] == '2':
+                if not certain_time:
+                    certain_time = True
+
+                    weather_cl = Weather(city, event.obj.message['text'], latt,
+                                         long)
+
+                    text = weather_cl.response_d('')
+
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=text,
+                                     random_id=random.randint(0, 2 ** 64))
+                    print("тут")
+                else:
+                    print("снова тут")
+                    weather_cl = Weather(city, event.obj.message['text'], latt, long)
+
+                    text = weather_cl.response_d(event.obj.message['text'])
+
+                    vk.messages.send(user_id=event.obj.message['from_id'],
+                                     message=text,
+                                     random_id=random.randint(0, 2 ** 64))
+                    main(True, vk)
+
 
 
         elif event.type == VkBotEventType.MESSAGE_NEW and not flag:
@@ -863,25 +905,84 @@ class Weather:
         self.lat = lat
         self.lon = lon
 
-        weather_request = 'https://api.weather.yandex.ru/v1/forecast/'
+        self.fact_d = {"temp": ['🌡', '℃'],
+                       "condition": '',
+                       "wind_speed": '📈',
+                       "wind_dir": '🧭',
+                       "pressure_mm": '💥',
+                       "humidity": '💦'}
+        self.condition_d = {"clear": ["ясно", '☀'],
+                       "partly-cloudy": ["малооблачно", '🌤'],
+                       "cloudy": ["облачно с прояснениями", '⛅'],
+                       "overcast": ["пасмурно", '🌫️'],
+                       "partly-cloudy-and-light-rain": ["небольшой дождь", '🌦'],
+                       "cloudy-and-light-rain": ["небольшой дождь", '🌦'],
+                       "overcast-and-light-rain": ["небольшой дождь", '🌦'],
+                       "partly-cloudy-and-rain": ["дождь", '🌧'],
+                       "overcast-and-rain": ["сильный дождь", '⛆'],
+                       "overcast-thunderstorms-with-rain": ["сильный дождь, гроза", '⛈'],
+                       "cloudy-and-rain": ["дождь", '☔'],
+                       "overcast-and-wet-snow": ["дождь со снегом", '🌨'],
+                       "partly-cloudy-and-snow": ["снег", '❄'],
+                       "cloudy-and-snow": ["снег", '❄'],
+                       "partly-cloudy-and-light-snow": ["небольшой снег", '❅'],
+                       "cloudy-and-light-snow": ["небольшой снег", '❅'],
+                       "overcast-and-light-snow": ["небольшой снег", '❅'],
+                       "overcast-and-snow": ["снегопад", '☃'],
+                       }
+
+        self.wind_d = {'nw': ["северо-западное", "↖"],
+                       "n": ["северное", "⬆"],
+                       "ne": ["северо-восточное", "↗"],
+                       "e": ["восточное", "➡"],
+                       "se": ["юго-восточное", "↘"],
+                       "s": ["южное", "⬇"],
+                       "sw": ["юго-западное", "↙"],
+                       "w": ["западное", "⬅"],
+                       "с": ["штиль", "⏹️"]}
+
+        self.weather_request = 'https://api.weather.yandex.ru/v1/forecast/'
 
         headers = {'X-Yandex-API-Key': '6b963e22-5fa2-47e6-8a49-d67a12dd9793'}
         w_params = {'lat': self.lat,
                     'lon': self.lon,
-                    'lang': "ru_RU"
-                    }
+                    'lang': "ru_RU"}
 
-        # if self.question == '1':
-        #
-        #
-        response = requests.get(weather_request, headers=headers, params=w_params)
-        if response:
-            json_response = response.json()
-            print(json_response['fact'])
+        self.response = requests.get(self.weather_request, headers=headers, params=w_params)
+
+    def response_d(self, time):
+        if self.response:
+            json_response = self.response.json()
+
+            if self.question == '1':
+                fact_w = json_response['fact']
+
+                text = f"Температура воздуха: {self.fact_d['temp'][0]} {fact_w['temp']}{self.fact_d['temp'][1]}\n" \
+                    f"Скорость ветра:  {self.fact_d['wind_speed']} {fact_w['wind_speed']}м/с\n"\
+                    f"Направление ветра:  {self.wind_d[fact_w['wind_dir']][1]} {self.wind_d[fact_w['wind_dir']][0]}\n"\
+                    f"Атмосферное давление:  {self.fact_d['pressure_mm']} {fact_w['pressure_mm']}мм рт.ст.\n"\
+                    f"Влажность воздуха:  {self.fact_d['humidity']} {fact_w['humidity']}%\n"\
+                    f"Описание погоды:  {self.condition_d[fact_w['condition']][0]} {self.condition_d[fact_w['condition']][1]}\n"
+            else:
+                if time == '':
+                    text = "Вы можете получить прогноз погоды на:\n"\
+                           "Утро(1)\n"\
+                           "День(2)\n"\
+                           "Вечер(3)\n"\
+                           "Ночь(4)\n"
+                elif time == '1':
+                    text = f"Прогноз на утро:"
+                elif time == '2':
+                    text = f"Прогноз на день:"
+                elif time == '3':
+                    text = f"Прогноз на вечер:"
+                elif time == '4':
+                    text = f"Прогноз на ночь:"
+            return text
         else:
             print("Ошибка выполнения запроса:")
-            print(weather_request)
-            print("Http статус:", response.status_code, "(", response.reason, ")")
+            print(self.weather_request)
+            print("Http статус:", self.response.status_code, "(", self.response.reason, ")")
             sys.exit(1)
 
 
@@ -906,11 +1007,11 @@ class Cities:
             response = requests.get(geocoder_api_server, params=geocoder_params)
 
             json_response = response.json()
+            kind_area = json_response["response"]["GeoObjectCollection"][
+                "featureMember"][0]["GeoObject"]["metaDataProperty"][
+                "GeocoderMetaData"]['Address']['Components'][-1]["kind"]
 
-            if (json_response["response"]["GeoObjectCollection"]
-                      ["featureMember"][0]["GeoObject"]["metaDataProperty"][
-                          "GeocoderMetaData"]['Address']['Components'][-1][
-                          'kind']) == 'province':
+            if kind_area == 'province' or kind_area == 'locality':
 
                 toponym = json_response["response"]["GeoObjectCollection"][
                     "featureMember"][0]["GeoObject"]
