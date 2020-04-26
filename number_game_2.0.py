@@ -2,6 +2,8 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
 import time
+import requests
+import sys
 
 vk_session = vk_api.VkApi(
     token='dc59d33f532316392242ba355086b5c35e22623e0fdae6f433d6f17b655b10ce8e95db5790ab60344beb1')
@@ -267,6 +269,9 @@ def main(not_first=False, vk=None, event=None):
         number_game = False
         useful_flag = False
         form_procc = True
+        weather_fl = False
+        city_fl = False
+
     for event in longpoll.listen():
         vk = vk_session.get_api()
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
@@ -280,6 +285,8 @@ def main(not_first=False, vk=None, event=None):
 
             useful_flag = False
             form_procc = True
+            weather_fl = False
+            city_fl = False
 
             print(event)
             print('Новое сообщение:')
@@ -289,7 +296,8 @@ def main(not_first=False, vk=None, event=None):
                              message="Привет я бот(название бота)\n"
                                      "и вот что я могу:\n"
                                      "Игры\n"
-                                     "Кое-что полезное",
+                                     "Кое-что полезное\n"
+                                     "Погода",
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and 'игр' in \
@@ -301,10 +309,10 @@ def main(not_first=False, vk=None, event=None):
 
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Можем поиграть в:\n"
-                                     "Камень ножницы бумага(1)\n"
+                                     "Камень-ножницы-бумага(1)\n"
                                      "Угадай число(2)\n"
                                      "Слова(3)\n"
-                                     "Что бы выбрать напиши цифру в скобках",
+                                     "Чтобы выбрать, напиши цифру в скобках",
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and 'полезн' in \
@@ -316,16 +324,17 @@ def main(not_first=False, vk=None, event=None):
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '1' and flag_play:
+            'text'] == '1' and flag_play and not number_game:
             vk.messages.send(user_id=id_user,
-                             message="Сейчас пойдет отсчет до 5 и на цифре пять нужно отправить"
-                                     "или камень или ножницы или бумага\n"
+                             message="Сейчас пойдет отсчет до 5 и на цифре пять " 
+                                     "Вам нужно отправить:"
+                                     "КАМЕНЬ, НОЖНИЦЫ или БУМАГА\n"
                                      "Памятка:\n"
-                                     "Бумага бьёт камень, но боится ножниц\n"
-                                     "Камень бьёт ножницы, но боится бумагу\n"
-                                     "Ножницы бьют бумагу, но боятся камня\n"
-                                     "Для продолжения напишите 'Да'\n"
-                                     "Если не хотите играть напишите 'Нет'",
+                                     "Бумага бьёт камень, но боится ножниц.\n"
+                                     "Камень бьёт ножницы, но боится бумагу.\n"
+                                     "Ножницы бьют бумагу, но боятся камня.\n"
+                                     "Для продолжения напишите ДА\n"
+                                     "Если не хотите играть - НЕТ",
                              random_id=random.randint(0, 2 ** 64))
             for event in longpoll.listen():
                 if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -336,21 +345,22 @@ def main(not_first=False, vk=None, event=None):
                     main(True, vk)
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '3' and flag_play:
+            'text'] == '3' and flag_play and not number_game:
             vk.messages.send(user_id=id_user,
                              message="Игра в слова"
-                                     "Правила очень просты вы называете любое слово,\n"
+                                     "Правила очень просты! Вы называете любое слово,\n"
                                      "а я называею слово, первая буква которого совпадает с"
-                                     " последней буквой вашего слова\n"
-                                     "Если названо слово,заканчивающееся на Й, Ы, Ъ, Ь,\n"
-                                     " следущему игроку нужно придумать слово на предпоследню"
+                                     " последней буквой Вашего слова\n"
+                                     "Если названо слово, заканчивающееся на Й, Ы, Ъ, Ь,\n"
+                                     " следующему игроку нужно придумать слово на предпоследню"
                                      " букву.\n"
-                                     " Слова в процессе однного кона игры не должны повторяться.\n"
-                                     "Нельзя использовать прилагательные, имена\n"
-                                     "Для продолжения напишите 'Да'\n"
-                                     "Если не хотите играть напишите 'Нет'\n"
-                                     "Если во время игры вы не знаете слово"
-                                     " или надоело играть напишите сдаюсь",
+                                     "Слова в процессе однного кона игры не должны повторяться.\n"
+                                     #   имена прилагательные и имена собственные ?
+                                     "Нельзя использовать прилагательные, имена\n"   
+                                     "Для продолжения напишите ДА\n"
+                                     "Если не хотите играть - НЕТ\n"
+                                     "Если во время игры Вы не знаете слово"
+                                     " или надоело играть - напишите СДАЮСЬ",
                              random_id=random.randint(0, 2 ** 64))
             for event in longpoll.listen():
                 if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -544,6 +554,33 @@ def main(not_first=False, vk=None, event=None):
 
             kit.append(event.obj.message['text'])
             print(kit)
+
+        if event.type == VkBotEventType.MESSAGE_NEW and (('погод' in \
+                event.obj.message['text'].lower() and flag and not weather_fl) or \
+                (event.obj.message['text'].lower() in ['1', '2'] and flag and weather_fl and city_fl)):
+
+            if not weather_fl:
+                weather_fl = True
+
+                weather_cl = Weather(city_fl)
+
+                text = "С радостью Вам помогу! Назовите название города или долготу и широту местности"\
+                       '''"Прогноз погоды на:"\
+                       "данный момент (1)"\
+                       "определенное время (2)"\
+                       "Введите цифру - 1 или 2 - в зависимостм о того, что Вам нужно."'''
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+
+            elif event.obj.message['text'].lower() == '1':
+                text = "Какие данные Вы хотели бы получить?\n"\
+                       "температура - 1\n"\
+                       "температура по ощущениям - 2\n"\
+                       "температура - 1\n"\
+                       "температура - 1\n"\
+                       "температура - 1\n"
 
 
         elif event.type == VkBotEventType.MESSAGE_NEW and not flag:
@@ -740,8 +777,58 @@ def slova(vk):
                         slova_flag = True
 
 
+class Weather:
+    def __init__(self, city, **ask):
+        self.question = ask
+        self.city_fl = city
+
+        weather_request = 'https://api.weather.yandex.ru/v1/forecast/'
+
+        # headers = {'X-Yandex-API-Key': '6b963e22-5fa2-47e6-8a49-d67a12dd9793'}
+        # w_params = {'lat': '37.490971',
+        #             'lon': '55.829152',
+        #             'lang': 'ru_RU'
+        #             }
+        # response = requests.get(weather_request, headers=headers,
+        #                         params=w_params)
+        if not self.city_fl:
+            if response:
+                json_response = response.json()
+                print(json_response['now_dt'])
+            else:
+                print("Ошибка выполнения запроса:")
+                print(weather_request)
+                print("Http статус:", response.status_code, "(", response.reason,
+                      ")")
+                sys.exit(1)
+
+    def search(self, toponym):
+        if toponym:
+            geocoder_api_server = "http://geocode-maps.yandex.ru/1.x/"
+
+            geocoder_params = {
+                "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+                "geocode": toponym,
+                "format": "json"}
+
+            response = requests.get(geocoder_api_server, params=geocoder_params)
+
+            json_response = response.json()
+
+            toponym = json_response["response"]["GeoObjectCollection"][
+                "featureMember"][0]["GeoObject"]
+
+            toponym_coodrinates = toponym["Point"]["pos"]
+            toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+
+            return [toponym_longitude, toponym_lattitude]
+
+Weather(1)
+
 if __name__ == '__main__':
     main()
+
+
 
 # подумать над флагом - разрешением выбрать игру
 # иначе при игре с числами - путаница
