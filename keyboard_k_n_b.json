@@ -1,0 +1,25 @@
+{
+  "one_time": true,
+  "buttons": [
+        [{
+            "action": {
+                "type": "text",
+                "label": "Камень"
+            },
+          "color": "positive"
+        },
+          {
+            "action": {
+                "type": "text",
+                "label": "Ножницы"
+            },
+          "color": "positive"
+          },{
+            "action": {
+                "type": "text",
+                "label": "Бумага"
+            },
+          "color": "positive"
+          }]
+    ]
+}

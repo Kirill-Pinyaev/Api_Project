@@ -262,6 +262,7 @@ def main(not_first=False, vk=None, event=None):
                          message="Вот что я могу:\n"
                                      "Игры\n"
                                      "Кое-что полезное",
+                         keyboard=open('keyboard_menu.json', 'r', encoding='UTF-8').read(),
                          random_id=random.randint(0, 2 ** 64))
         flag_play = False
         flag = True
@@ -298,6 +299,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Игры\n"
                                      "Кое-что полезное\n"
                                      "Погода",
+                             keyboard=open('keyboard_menu.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and 'игр' in \
@@ -313,6 +315,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Угадай число(2)\n"
                                      "Слова(3)\n"
                                      "Чтобы выбрать, напиши цифру в скобках",
+                             keyboard=open('keyboard_play.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and 'полезн' in \
@@ -335,6 +338,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Ножницы бьют бумагу, но боятся камня.\n"
                                      "Для продолжения напишите ДА\n"
                                      "Если не хотите играть - НЕТ",
+                             keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
             for event in longpoll.listen():
                 if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -361,6 +365,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Если не хотите играть - НЕТ\n"
                                      "Если во время игры Вы не знаете слово"
                                      " или надоело играть - напишите СДАЮСЬ",
+                             keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
             for event in longpoll.listen():
                 if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -395,18 +400,14 @@ def main(not_first=False, vk=None, event=None):
 
             if event.obj.message['text'].lower() in ["не перезапускать", "стоп"]:
                 number_game, numb_gm_polz = False, False
-
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message="Вот что я могу:\n"
-                                         "Игры\n"
-                                         "Кое-что полезное",
-                                 random_id=random.randint(0, 2 ** 64))
+                main(True, vk)
             else:
                 text = "Хорошо. Загадывайте число.\n" \
                        "Загадали? ДА / НЕТ"
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
+                                 keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                                  random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
@@ -418,6 +419,7 @@ def main(not_first=False, vk=None, event=None):
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
+                                 keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                                  random_id=random.randint(0, 2 ** 64))
 
             else:
@@ -505,6 +507,7 @@ def main(not_first=False, vk=None, event=None):
                                      "предметов, которую Вы назовёте.\n"
                                      "Нужна такая помощь? ДА / НЕТ\n"
                                      "Напишите СТОП - если хотите завершить навык\n",
+                             keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and ((event.obj.message[
@@ -671,6 +674,7 @@ class NumberGameII:
 def restart_game(vk, game_name):
     vk.messages.send(user_id=id_user,
                      message="Еще раз?",
+                     keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                      random_id=random.randint(0, 2 ** 64))
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -694,6 +698,10 @@ def letters_slova(word, proverka=False):
 
 def rock_paper_scissors(vk, event):
     sp = ['ножницы', 'камень', 'бумага']
+    vk.messages.send(user_id=id_user,
+                     message="Отсчёт пошел",
+                     keyboard=open('keyboard_k_n_b.json', 'r', encoding='UTF-8').read(),
+                     random_id=random.randint(0, 2 ** 64))
     for i in range(1, 6):
         vk.messages.send(user_id=id_user,
                          message=f"{i}",

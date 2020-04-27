@@ -1,0 +1,25 @@
+{
+  "one_time": true,
+  "buttons": [
+        [{
+            "action": {
+                "type": "text",
+                "label": "Игры"
+            },
+          "color": "positive"
+        },
+          {
+            "action": {
+                "type": "text",
+                "label": "Кое-что полезное"
+            },
+          "color": "positive"
+          },{
+            "action": {
+                "type": "text",
+                "label": "Погода"
+            },
+          "color": "positive"
+          }]
+    ]
+}
