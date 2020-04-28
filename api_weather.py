@@ -25,8 +25,8 @@ class Weather:
             lat, lon = self.search(self.city)
             print(lat, lon)
             headers = {'X-Yandex-API-Key': '6b963e22-5fa2-47e6-8a49-d67a12dd9793'}
-            w_params = {'lat': '37.490971',
-                        'lon': '55.829152',
+            w_params = {'lat': lat,
+                        'lon': lon,
                         'lang': 'ru_RU'
                         }
             response = requests.get(weather_request, headers=headers,
@@ -34,6 +34,8 @@ class Weather:
 
             if response:
                 json_response = response.json()
+                print(json_response['info']['tzinfo']['name'])
+                print(json_response["forecasts"])
             # print(json_response['now_dt'])
             else:
                 print("Ошибка выполнения запроса:")
@@ -61,7 +63,8 @@ class Weather:
             # print(json_response["response"]["GeoObjectCollection"]
             #       ["featureMember"][0]["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]['kind'])
 
-            # print(json_response)
+            print(json_response)
+            print(json_response['response']["GeoObjectCollection"]["metaDataProperty"]["GeocoderResponseMetaData"]['found'])
             print(json_response["response"]["GeoObjectCollection"]
                   ["featureMember"][0]["GeoObject"]["metaDataProperty"][
                       "GeocoderMetaData"]['Address']['Components'][-1]['kind'])
@@ -81,8 +84,10 @@ class Weather:
             print()
             print(toponym + 'err')
             print()
-
-Weather("Казань", "погода")
+a = 0
+if a:
+    print('yes')
+Weather("Москва", "погода")
 # Weather("россия", "погода")
 # Weather("", "погода")
 # Weather("apple", "погода")

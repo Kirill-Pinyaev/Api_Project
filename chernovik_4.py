@@ -662,9 +662,9 @@ def main(not_first=False, vk=None, event=None):
 
         if event.type == VkBotEventType.MESSAGE_NEW and ((event.obj.message[
             'text'] in ['1', '2'] and flag and weather_fl and not city_fl_pr and \
-                w_weather and not this_moment and not certain_time) or (event.obj.message[
+                w_weather and not w_time and not this_moment and not certain_time) or (event.obj.message[
             'text'] in ['1', '2', '3', '4'] and flag and weather_fl and not city_fl_pr and \
-                w_weather and (this_moment or certain_time))):
+                w_weather and not w_time and (this_moment or certain_time))):
 
             if event.obj.message['text'] == '1' and not certain_time:
                 if not this_moment:
@@ -993,10 +993,10 @@ class Weather:
                     text_2 = f"Температура воздуха: {self.fact_d['temp'][0]} {fact_w['temp_avg']}{self.fact_d['temp'][1]}\n" \
                         f"Скорость ветра:  {self.fact_d['wind_speed']} {fact_w['wind_speed']}м/с\n" \
                         f"Направление ветра:  {self.wind_d[fact_w['wind_dir']][1]} {self.wind_d[fact_w['wind_dir']][0]}\n" \
-                        f"Атмосферное давление:  {self.fact_d['pressure_mm']} {fact_w['pressure_mm']}мм рт.ст.\n" \
+                         f"Атмосферное давление:  {self.fact_d['pressure_mm']} {fact_w['pressure_mm']}мм рт.ст.\n" \
                         f"Влажность воздуха:  {self.fact_d['humidity']} {fact_w['humidity']}%\n" \
                         f"Описание погоды:  {self.condition_d[fact_w['condition']][0]} {self.condition_d[fact_w['condition']][1]}\n"
-                return text_1, text_2
+                    return text_1, text_2
         else:
             print("Ошибка выполнения запроса:")
             print(self.weather_request)
@@ -1025,23 +1025,29 @@ class Cities:
             response = requests.get(geocoder_api_server, params=geocoder_params)
 
             json_response = response.json()
-            kind_area = json_response["response"]["GeoObjectCollection"][
-                "featureMember"][0]["GeoObject"]["metaDataProperty"][
-                "GeocoderMetaData"]['Address']['Components'][-1]["kind"]
+            print(json_response['response']["GeoObjectCollection"]["metaDataProperty"]["GeocoderResponseMetaData"]['found'] == '0')
+            if json_response['response']["GeoObjectCollection"]["metaDataProperty"]["GeocoderResponseMetaData"]['found'] != '0':
+                kind_area = json_response["response"]["GeoObjectCollection"][
+                    "featureMember"][0]["GeoObject"]["metaDataProperty"][
+                    "GeocoderMetaData"]['Address']['Components'][-1]["kind"]
 
-            if kind_area == 'province' or kind_area == 'locality':
+                if kind_area == 'province' or kind_area == 'locality':
 
-                toponym = json_response["response"]["GeoObjectCollection"][
-                    "featureMember"][0]["GeoObject"]
+                    toponym = json_response["response"]["GeoObjectCollection"][
+                        "featureMember"][0]["GeoObject"]
 
-                city = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["metaDataProperty"][
-                      "GeocoderMetaData"]['Address']['Components'][-1][
-                      'name']
+                    city = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["metaDataProperty"][
+                          "GeocoderMetaData"]['Address']['Components'][-1][
+                          'name']
 
-                toponym_coodrinates = toponym["Point"]["pos"]
-                toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+                    toponym_coodrinates = toponym["Point"]["pos"]
+                    toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
 
-                return toponym_longitude, toponym_lattitude, city
+                    return toponym_longitude, toponym_lattitude, city
+                else:
+                    text = "Извините, я не знаю такого города. Может, Вы допустили ошибку?\n" \
+                           "Попробуйте ввести название города еще раз"
+                return text
             else:
                 text = "Извините, я не знаю такого города. Может, Вы допустили ошибку?\n"\
                        "Попробуйте ввести название города еще раз"
