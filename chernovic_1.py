@@ -254,6 +254,23 @@ slovarik_slov = {
           'ягуар', 'яд', 'ядро', 'язва', 'яйцо', 'якорь', 'яма', 'янтарь', 'японец', 'ярость',
           'ярус', 'ясли', 'ястреб']
     }
+attachement_ph_d = {'False': '',
+                    'True': {'hi': ['video-193318026_456239019', 'video-193318026_456239021',
+                           'video-193318026_456239024', 'video-193318026_456239033',
+                           'video-193318026_456239035', 'video-193318026_456239036'],
+                    'city': [ 'video-193318026_456239030', 'video-193318026_456239022'],
+                    'weather': ['video-193318026_456239046', 'video-193318026_456239047',
+                                'video-193318026_456239048'],
+                    'choice': ['video-193318026_456239025', 'video-193318026_456239026'],
+                    'r-p-s': ['video-193318026_456239023', ''],
+                    'win': ['video-193318026_456239028', 'video-193318026_456239029'],
+                    'fail': ['video-193318026_456239042', 'video-193318026_456239043',
+                             ],
+                    'sad': ['video-193318026_456239045'],
+                    'time': ['video-193318026_456239031', 'video-193318026_456239032',
+                             'video-193318026_456239044'],
+                    'words': ['video-193318026_456239049', 'video-193318026_456239050'],
+                    'number': ['video-193318026_456239034', 'video-193318026_456239037']}}
 
 
 def main(not_first=False, vk=None, event=None):
@@ -264,6 +281,7 @@ def main(not_first=False, vk=None, event=None):
                                  "Игры\n"
                                  "Кое-что полезное\n" 
                                  "Погода",
+                         attachement=data('hi'),
                          random_id=random.randint(0, 2 ** 64))
         flag_play = False
         flag = True
@@ -300,6 +318,8 @@ def main(not_first=False, vk=None, event=None):
             this_moment = False   # выбрана погода на "данный момент"
             certain_time = False   # выбрана погода на "определенное время"
 
+            data_fl = None
+
             print(event)
             print('Новое сообщение:')
             print('Для меня от:', event.obj.message['from_id'])
@@ -310,6 +330,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Игры\n"
                                      "Кое-что полезное\n"
                                      "Погода",
+                             attachment=data('hi'),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and 'игр' in \
@@ -333,6 +354,7 @@ def main(not_first=False, vk=None, event=None):
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Что я могу:\n"
                                      "Помочь принять решение(1)\n",
+                             attachment=data('choice'),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
@@ -347,6 +369,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Ножницы бьют бумагу, но боятся камня.\n"
                                      "Для продолжения напишите ДА\n"
                                      "Если не хотите играть - НЕТ",
+                             attachement=attachement_ph_d['True']['r-p-s'],
                              random_id=random.randint(0, 2 ** 64))
             for event in longpoll.listen():
                 if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -373,6 +396,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Если не хотите играть - НЕТ\n"
                                      "Если во время игры Вы не знаете слово"
                                      " или надоело играть - напишите СДАЮСЬ",
+                             attachement=data('words'),
                              random_id=random.randint(0, 2 ** 64))
             for event in longpoll.listen():
                 if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -395,6 +419,7 @@ def main(not_first=False, vk=None, event=None):
                                      "'Больше' - загаданное число больше Вашего.\n"
                                      "Напишите СТОП - если хотите завершить игру\n"
                                      "Кто загадывает число: Я или ВЫ?",
+                             attachement=data('numbers'),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and \
@@ -430,6 +455,7 @@ def main(not_first=False, vk=None, event=None):
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
+                                 attachement=data('time'),
                                  random_id=random.randint(0, 2 ** 64))
 
             else:
@@ -517,6 +543,7 @@ def main(not_first=False, vk=None, event=None):
                                      "предметов, которую Вы назовёте.\n"
                                      "Нужна такая помощь? ДА / НЕТ\n"
                                      "Напишите СТОП - если хотите завершить навык\n",
+                             attachement=data('choice'),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and ((event.obj.message[
@@ -535,6 +562,7 @@ def main(not_first=False, vk=None, event=None):
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
+                                 attachement=data('sad'),
                                  random_id=random.randint(0, 2 ** 64))
 
                 main(True, vk)
@@ -548,6 +576,7 @@ def main(not_first=False, vk=None, event=None):
                        "В конце введите слово - ВЫБИРАЙ"
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
+                                 attachement=data('choice'),
                                  random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and flag \
@@ -583,6 +612,7 @@ def main(not_first=False, vk=None, event=None):
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
+                                 attachement=data('city'),
                                  random_id=random.randint(0, 2 ** 64))
             elif event.obj.message['text'].lower() == "стоп":
                 # if weather_fl:
@@ -596,6 +626,7 @@ def main(not_first=False, vk=None, event=None):
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
+                                 attachement=data('sad'),
                                  random_id=random.randint(0, 2 ** 64))
 
                 main(True, vk)
@@ -648,20 +679,21 @@ def main(not_first=False, vk=None, event=None):
                 text = "Прогноз погоды на:\n" \
                        "Данный момент (1)\n" \
                        "Определенное время (2)\n"
-
+                att = random.choice(attachement_ph_d['True']['weather'])
+                print(att)
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 attachement='video-193318026_456239048',
+                                 random_id=random.randint(0, 2 ** 64))
             else:
                 w_time = True
 
-                # text = "Какие Вы хотите получить данные:\n"\
-                #        "О точном времени(1)\n"\
-                #        "О часовом поясе(2)\n"\
-                #        "О явлении полярной ночи в городе(3)\n"\
-                #        "О времени года(4)\n"
-                print(w_weather)
-                text = Weather(city, False, latt, long, w_weather).response_d('')
-            vk.messages.send(user_id=event.obj.message['from_id'],
-                             message=text,
-                             random_id=random.randint(0, 2 ** 64))
+                weather_cl = Weather(city, False, latt, long, w_weather)
+                text = weather_cl.response_d('')
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+                main(True, vk)
 
         if event.type == VkBotEventType.MESSAGE_NEW and ((event.obj.message[
             'text'] in ['1', '2'] and flag and weather_fl and not city_fl_pr and \
@@ -679,6 +711,7 @@ def main(not_first=False, vk=None, event=None):
 
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=text,
+                                     attachement=data('weather'),
                                      random_id=random.randint(0, 2 ** 64))
                     main(True, vk)
             if (event.obj.message['text'] == '2') or (certain_time and event.obj
@@ -693,10 +726,9 @@ def main(not_first=False, vk=None, event=None):
 
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=text,
+                                     attachement=data('weather'),
                                      random_id=random.randint(0, 2 ** 64))
-                    print("тут")
                 else:
-                    print("снова тут")
                     weather_cl = Weather(city, this_moment, latt, long, w_weather)
 
                     text_1, text_2 = weather_cl.response_d(event.obj.message['text'])
@@ -983,6 +1015,27 @@ class Weather:
 
 
 
+        self.time_d = {"date": '🗓',
+                       "tzinfo": '🕰',
+                       "daytime": '',
+                       "polar": '💫',
+                       "season": ''}
+        self.daytime_d = {"day": '☀ ',
+                          "night": '🌙'}
+        self.season_d = {"summer": ['🍃', 'лето'],
+                         "autumn" : ['🍂', 'осень'],
+                         "spring": ['🌾', 'весна'],
+                         "winter": ['❄', 'зима']}
+        self.sun_d = {"sunrise": '🌅',
+                      "sunset": '🌇'}
+        self.moon_d = {"new-moon": ['🌑', 'новолуние'],
+                       "last-quarter": ['🌗', 'последняя четверть'],
+                       "full-moon": ['🌕', 'полнолуние'],
+                       "decreasing-moon": ['🌖', 'убывающая Луна'],
+                       "first-quarter": ['🌓', 'первая четверть'],
+                       "growing-moon": ['🌔', 'растущая Луна']
+                       }
+
         self.weather_request = 'https://api.weather.yandex.ru/v1/forecast/'
 
         headers = {'X-Yandex-API-Key': '6b963e22-5fa2-47e6-8a49-d67a12dd9793'}
@@ -1040,6 +1093,20 @@ class Weather:
                        f"Часовой пояс:  {self.time_d['tzinfo']} {json_response['info']['tzinfo']['name']}\n"\
                        f"Явление полярной ночи в городе:\n"\
                        f"Временя года: \n"
+                print(json_response['now_dt'])
+                if json_response['fact']['polar']:
+                    polar_txt = 'да'
+                else:
+                    polar_txt = 'нет'
+                text = [f"Дата: {self.time_d['date']} {datetime.datetime.now().date()}\n",
+                        # f"Точное время:  {self.clock_d[datetime.datetime.now().hour]}{datetime.datetime.now().time()}\n",
+                        f"Часовой пояс:  {self.time_d['tzinfo']} {json_response['info']['tzinfo']['name']}\n",
+                        f"Время рассвета: {self.sun_d['sunrise']} {json_response['forecasts'][0]['sunrise']}\n",
+                        f"Время заката: {self.sun_d['sunset']} {json_response['forecasts'][0]['sunset']}\n",
+                        f"Время года: {self.season_d[json_response['fact']['season']][0]} {self.season_d[json_response['fact']['season']][1]}\n",
+                        f"Явление полярной ночи в городе: {self.time_d['polar']} {polar_txt}\n",
+                        f"Фаза Луны: {self.moon_d[json_response['forecasts'][0]['moon_text']][0]} {self.moon_d[json_response['forecasts'][0]['moon_text']][1]}"]
+                return ('').join(text)
 
         else:
             print("Ошибка выполнения запроса:")
@@ -1101,6 +1168,14 @@ class Cities:
             text = "Извините, я не знаю такого города. Может, Вы допустили ошибку?\n"\
                    "Попробуйте ввести название города еще раз"
             return text
+
+
+def data(key):
+    attachement = attachement_ph_d[random.choice(['True', 'False'])]
+    if bool(attachement):
+        return random.choice(attachement[key])
+    return ''
+
 
 if __name__ == '__main__':
     main()

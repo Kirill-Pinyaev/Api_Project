@@ -38,10 +38,11 @@ print(chr(ord('🌖'))) # decreasing-moon
 print(chr(ord('🌓'))) # first-quarter
 print(chr(ord('🌔'))) # growing-moon
 
-print(chr(ord('🌅'))) # sunrise
-print(chr(ord('🌇'))) # sunset
+print(chr(ord('🌄'))) # sunrise
+print(chr(ord('🌅'))) # sunset
+print(chr(ord('🌄'))) # polar
 
-print(chr(ord('🕰'))) # clock
+print(chr(ord('🕰x   '))) # clock
 
 print(chr(ord('🌬'))) #wind
 wind_direction = {'nw': 'северо-западное',
@@ -62,7 +63,7 @@ print(chr(ord('🍂'))) # autumn
 print(chr(ord('🍃'))) # summer
 print(chr(ord('🌾'))) # spring
 
-print(chr(ord('🌄'))) # polar
+
 print(chr(ord('💫'))) # polar
 
 print(chr(ord('🌡️'))) # thermometer
