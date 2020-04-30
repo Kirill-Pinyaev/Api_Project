@@ -254,8 +254,7 @@ slovarik_slov = {
           'ягуар', 'яд', 'ядро', 'язва', 'яйцо', 'якорь', 'яма', 'янтарь', 'японец', 'ярость',
           'ярус', 'ясли', 'ястреб']
     }
-attachement_ph_d = {'False': '',
-                    'True': {'hi': ['video-193318026_456239019', 'video-193318026_456239021',
+attachement_ph_d = {'hi': ['video-193318026_456239019', 'video-193318026_456239021',
                            'video-193318026_456239024', 'video-193318026_456239033',
                            'video-193318026_456239035', 'video-193318026_456239036'],
                     'city': [ 'video-193318026_456239030', 'video-193318026_456239022'],
@@ -270,18 +269,18 @@ attachement_ph_d = {'False': '',
                     'time': ['video-193318026_456239031', 'video-193318026_456239032',
                              'video-193318026_456239044'],
                     'words': ['video-193318026_456239049', 'video-193318026_456239050'],
-                    'number': ['video-193318026_456239034', 'video-193318026_456239037']}}
+                    'number': ['video-193318026_456239034', 'video-193318026_456239037']}
 
 
 def main(not_first=False, vk=None, event=None):
-    global flag, flag_play, id_user
+    global flag, flag_play, id_user, attachement_ph_d
     if not_first:
         vk.messages.send(user_id=id_user,
                          message="Вот что я могу:\n"
                                  "Игры\n"
                                  "Кое-что полезное\n" 
                                  "Погода",
-                         attachement=data('hi'),
+                         attachment=random.choice(attachement_ph_d['hi']),
                          random_id=random.randint(0, 2 ** 64))
         flag_play = False
         flag = True
@@ -318,7 +317,7 @@ def main(not_first=False, vk=None, event=None):
             this_moment = False   # выбрана погода на "данный момент"
             certain_time = False   # выбрана погода на "определенное время"
 
-            data_fl = None
+            # data_fl = None
 
             print(event)
             print('Новое сообщение:')
@@ -330,7 +329,7 @@ def main(not_first=False, vk=None, event=None):
                                      "Игры\n"
                                      "Кое-что полезное\n"
                                      "Погода",
-                             attachment=data('hi'),
+                             attachment=random.choice(attachement_ph_d['hi']),
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and 'игр' in \
@@ -1179,3 +1178,9 @@ def data(key):
 
 if __name__ == '__main__':
     main()
+
+Video ID: -193318026_456239030
+Content host: pvv4.vkuservideo.net
+Media provider: hls
+Quality: 360
+Auto quality: enabled
