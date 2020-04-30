@@ -626,7 +626,7 @@ def main(not_first=False, vk=None, event=None):
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
-                                 attachment=random.choice(attachment_ph_d['city']),
+                                 attachment=random.choice(attachment_ph_d['planet']),
                                  random_id=random.randint(0, 2 ** 64))
 
             elif event.obj.message['text'].lower() == "стоп":
@@ -692,8 +692,7 @@ def main(not_first=False, vk=None, event=None):
                 text = "Прогноз погоды на:\n" \
                        "Данный момент (1)\n" \
                        "Определенное время (2)\n"
-                att = random.choice(attachment_ph_d['True']['weather'])
-                print(att)
+
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
                                  attachment=random.choice(attachment_ph_d['weather']),
