@@ -1178,9 +1178,3 @@ def data(key):
 
 if __name__ == '__main__':
     main()
-
-Video ID: -193318026_456239030
-Content host: pvv4.vkuservideo.net
-Media provider: hls
-Quality: 360
-Auto quality: enabled
