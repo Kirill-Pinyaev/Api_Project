@@ -105,7 +105,7 @@ def main(not_first=False, vk=None, event=None):
                              random_id=random.randint(0, 2 ** 64))
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '1' and flag_play and not number_game:
+            'text'] == '1' and flag_play and not (number_game and words_game):
             rps_game = True
             vk.messages.send(user_id=id_user,
                              message="Сейчас пойдет отсчет до 5 и на цифре пять " 
@@ -262,6 +262,7 @@ def main(not_first=False, vk=None, event=None):
 
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
             'text'].isdigit() and flag and number_game and numb_gm_ii:
+            print('hi')
             if not find_highest:
                 number_game, numb_gm_polz, find_highest, text = numb_gm_ii_cl. \
                     highest(event.obj.message['text'].lower())
@@ -274,7 +275,6 @@ def main(not_first=False, vk=None, event=None):
                                  message=text,
                                  random_id=random.randint(0, 2 ** 64))
             else:
-
                 text = numb_gm_ii_cl.numb_game_ii_func(event.obj.message['text'].lower())
 
                 vk.messages.send(user_id=event.obj.message['from_id'],

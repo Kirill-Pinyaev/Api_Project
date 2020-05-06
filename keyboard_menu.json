@@ -11,7 +11,7 @@
           {
             "action": {
                 "type": "text",
-                "label": "Кое-что полезное"
+                "label": "Решение"
             },
           "color": "positive"
           },{
