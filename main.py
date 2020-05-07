@@ -40,9 +40,9 @@ help_7 = False   # пользователь не ПЕРЕЗАПУСТИТЬ / Н
 help_8 = False   # пользователь не вводит макс. число в игре "угадай число" (комп)
 help_9 = False   # пользователь при угадывании вводит не число в игре "угадай число" (польз)
 help_10 = False   # пользователь не ввел ДА / НЕТ  в навыке "погода"
-help_11 = False
-help_12 = False
-help_13 = False
+help_11 = False   # пользователь на выбрал тип данных в навыке "погода"
+help_12 = False   # пользователь на выбрал время прогноза в навыке "погода"
+help_13 = False   # пользователь на выбрал время прогноза в навыке "погода"
 
 id_d = {}   # flag, game_flag, number_game, words_game, rps_game, useful_flag
             # form_procc, weather_fl, city_fl_pr, w_weather, w_time, this_moment
@@ -52,8 +52,6 @@ id_d = {}   # flag, game_flag, number_game, words_game, rps_game, useful_flag
 def main(not_first=False, vk=None, event=None):
     global flag, flag_play, id_user, help_1, help_2, help_3, help_4, help_5, \
         help_6, help_7, help_8, help_9, help_10, help_11, help_12, help_13
-    # global number_game, words_game, rps_game, decision, form_procc, weather_fl
-    # global city_fl_pr, w_weather, w_time, this_moment, certain_time
 
     number_game = False  # выбрана числовая игра
     words_game = False  # выбрана игра в слова
