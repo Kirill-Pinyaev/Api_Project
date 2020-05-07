@@ -4,14 +4,14 @@
         [{
             "action": {
                 "type": "text",
-                "label": "ДА"
+                "label": "Время"
             },
           "color": "positive"
         },
           {
             "action": {
                 "type": "text",
-                "label": "НЕТ"
+                "label": "Погода"
             },
           "color": "positive"
           }]
