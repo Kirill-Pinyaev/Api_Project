@@ -4,20 +4,20 @@
         [{
             "action": {
                 "type": "text",
-                "label": "1"
+                "label": "Камень-ножницы-бумага"
             },
           "color": "positive"
         },
           {
             "action": {
                 "type": "text",
-                "label": "2"
+                "label": "Угадай число"
             },
           "color": "positive"
           },{
             "action": {
                 "type": "text",
-                "label": "3"
+                "label": "Слова"
             },
           "color": "positive"
           }]

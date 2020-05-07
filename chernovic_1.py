@@ -126,17 +126,17 @@ def main(not_first=False, vk=None, event=None):
 
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Можем поиграть в:\n"
-                                     "Камень-ножницы-бумага(1)\n"
-                                     "Угадай число(2)\n"
-                                     "Слова(3)\n"
+                                     "Камень-ножницы-бумага\n"
+                                     "Угадай число\n"
+                                     "Слова\n"
                                      "Чтобы выбрать, напиши цифру в скобках",
                              attachment=random.choice(attachment_ph_d['game']),
                              keyboard=open('keyboard_play.json', 'r',
                                            encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '1' and id_d[event.obj.message['from_id']]['flag'] \
+        elif event.type == VkBotEventType.MESSAGE_NEW and "камень-ножницы-бумага" in event.obj.message[
+            'text'].lower() and id_d[event.obj.message['from_id']]['flag'] \
                 and id_d[event.obj.message['from_id']]['flag_play'] and \
                 not(id_d[event.obj.message['from_id']]['number_game'] or
                     id_d[event.obj.message['from_id']]['rps_game'] or
@@ -179,7 +179,7 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '3' and id_d[event.obj.message['from_id']]['flag'] and \
+            'text'].lower() == 'слова' and id_d[event.obj.message['from_id']]['flag'] and \
                 id_d[event.obj.message['from_id']]['flag_play'] and not\
                 (id_d[event.obj.message['from_id']]['number_game'] or
                  id_d[event.obj.message['from_id']]['rps_game'] or
@@ -227,8 +227,8 @@ def main(not_first=False, vk=None, event=None):
                                                encoding='UTF-8').read(),
                                  random_id=random.randint(0, 2 ** 64))
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '2' and id_d[event.obj.message['from_id']]['flag'] and \
+        elif event.type == VkBotEventType.MESSAGE_NEW and 'число' in event.obj.message[
+            'text'] and id_d[event.obj.message['from_id']]['flag'] and \
                 id_d[event.obj.message['from_id']]['flag_play'] and not(
                 id_d[event.obj.message['from_id']]['number_game'] or
                 id_d[event.obj.message['from_id']]['rps_game'] or
@@ -470,6 +470,8 @@ def main(not_first=False, vk=None, event=None):
                              message=f"Думаю, что {random.choice(kit)} - "
                                      "идеальный вариант!\n"
                                      "Напишите мне -  ПЕРЕЗАПУСТИТЬ навык / НЕ ПЕРЕЗАПУСКАТЬ",
+                             keyboard=open('keyboard_strat_notstart.json', 'r',
+                                           encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and \
@@ -539,12 +541,16 @@ def main(not_first=False, vk=None, event=None):
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
                                          attachment=random.choice(attachment_ph_d['city']),
+                                         keyboard=open('keyboard_y_n.json', 'r',
+                                                       encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
                     else:
                         text = city_cl.search(city)
 
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
+                                         keyboard=open('keyboard_y_n.json', 'r',
+                                                       encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
@@ -560,13 +566,18 @@ def main(not_first=False, vk=None, event=None):
                 text = f"Какие данные Вы бы хотели получить для города {city}?\n" \
                     "Данные о погоде(1)\n" \
                     "Данные о времени(2)\n"
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 keyboard=open('keyboard_time_wehar.json', 'r',
+                                               encoding='UTF-8').read(),
+                                 random_id=random.randint(0, 2 ** 64))
             else:
                 id_d[event.obj.message['from_id']]['city_fl_pr'] = True
                 text = "Повторите ввод названия города"
 
-            vk.messages.send(user_id=event.obj.message['from_id'],
-                             message=text,
-                             random_id=random.randint(0, 2 ** 64))
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message['text']\
                 in ['1', '2'] and id_d[event.obj.message['from_id']]['flag'] and \
@@ -691,9 +702,9 @@ def main(not_first=False, vk=None, event=None):
                     elif id_d[event.obj.message['from_id']]['help'][1] \
                             and event.type == VkBotEventType.MESSAGE_NEW:
                         text = "Выберите игру:\n" \
-                               "Камень-ножницы-бумага(1)\n" \
-                               "Угадай число(2)\n" \
-                               "Слова(3)\n" \
+                               "Камень-ножницы-бумага\n" \
+                               "Угадай число\n" \
+                               "Слова\n" \
                                "Чтобы выбрать, напиши цифру в скобках"
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
@@ -724,6 +735,8 @@ def main(not_first=False, vk=None, event=None):
 
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
+                                         keyboard=open('keyboard_y_n.json', 'r',
+                                                       encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
                     elif id_d[event.obj.message['from_id']]['help'][5] \
                             and event.type == VkBotEventType.MESSAGE_NEW:
@@ -738,6 +751,9 @@ def main(not_first=False, vk=None, event=None):
 
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
+                                         keyboard=open('keyboard_strat_notstart.json',
+                                             'r',
+                                             encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
                     elif id_d[event.obj.message['from_id']]['help'][7] \
                             and event.type == VkBotEventType.MESSAGE_NEW:
@@ -760,6 +776,8 @@ def main(not_first=False, vk=None, event=None):
 
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
+                                         keyboard=open('keyboard_y_n.json', 'r',
+                                                       encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
                     elif id_d[event.obj.message['from_id']]['help'][10] \
                             and event.type == VkBotEventType.MESSAGE_NEW:
@@ -769,6 +787,9 @@ def main(not_first=False, vk=None, event=None):
 
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
+                                         keyboard=open(
+                                             'keyboard_time_wehar.json', 'r',
+                                             encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
                     elif id_d[event.obj.message['from_id']]['help'][11] \
                             and event.type == VkBotEventType.MESSAGE_NEW:
@@ -778,6 +799,8 @@ def main(not_first=False, vk=None, event=None):
 
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
+                                         keyboard=open('keyboard_now_notnow.json', 'r',
+                                             encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
                     elif id_d[event.obj.message['from_id']]['help'][12] \
                             and event.type == VkBotEventType.MESSAGE_NEW:
@@ -1104,7 +1127,7 @@ class Weather:
                         f"Часовой пояс:  {self.time_d['tzinfo']} {json_response['info']['tzinfo']['name']}\n",
                         f"Время рассвета: {self.sun_d['sunrise']} {json_response['forecasts'][0]['sunrise']}\n",
                         f"Время заката: {self.sun_d['sunset']} {json_response['forecasts'][0]['sunset']}\n",
-                        f"Время года: {self.season_d[json_response['fact']['season']][0]} {self.season_d[json_response['fact']['season']][1]}\n",
+                        f"Время года: {self.sрогноeason_d[json_response['fact']['season']][0]} {self.season_d[json_response['fact']['season']][1]}\n",
                         f"Явление полярной ночи в городе: {self.time_d['polar']} {polar_txt}\n",
                         f"Фаза Луны: {self.moon_d[json_response['forecasts'][0]['moon_text']][0]} {self.moon_d[json_response['forecasts'][0]['moon_text']][1]}"]
                 return ('').join(text)

@@ -11,13 +11,13 @@
           {
             "action": {
                 "type": "text",
-                "label": "Кое-что полезное"
+                "label": "Погода"
             },
           "color": "positive"
           },{
             "action": {
                 "type": "text",
-                "label": "Погода"
+                "label": "Решение"
             },
           "color": "positive"
           }]

@@ -4,14 +4,14 @@
         [{
             "action": {
                 "type": "text",
-                "label": "ДА"
+                "label": "Перезапустить"
             },
           "color": "positive"
         },
           {
             "action": {
                 "type": "text",
-                "label": "НЕТ"
+                "label": "Не перезапускать"
             },
           "color": "positive"
           }]
