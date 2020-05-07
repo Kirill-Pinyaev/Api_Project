@@ -5,7 +5,6 @@ import time, datetime
 import requests
 import sys
 
-
 vk_session = vk_api.VkApi(
     token='dc59d33f532316392242ba355086b5c35e22623e0fdae6f433d6f17b655b10ce8e95db5790ab60344beb1')
 longpoll = VkBotLongPoll(vk_session, '193318026')
