@@ -12,84 +12,92 @@ longpoll = VkBotLongPoll(vk_session, '193318026')
 
 flag = False
 flag_play = False
-id_user = None
 slovarik_slov = addition.slovarik_slov_add
 attachment_ph_d = addition.attachment_ph_d_add
 
-number_game = False  # выбрана числовая игра
-words_game = False   # выбрана игра в слова
-rps_game = False   # выбрана игра "камень-ножницы-бумага"
+# help_1 = False   # пользователь не ввел один из 3 возможных навыков
+# help_2 = False   # пользователь не ввел название одной из 3 возможных игр
+# help_3 = False   # пользователь не ввел ДА / НЕТ / СТОП в навыке "решение"
+# help_4 = False   # пользователь не ввел Я / ВЫ / СТОП в игре "угадай число"
+# help_5 = False   # пользователь не ввел ДА / НЕТ / в игре "угадай число" (польз)
+# help_6 = False   # пользователь не ввел БОЛЬШЕ / МЕНЬШЕ / РАВНО в игре "угадай число" (польз)
+# help_7 = False   # пользователь не ПЕРЕЗАПУСТИТЬ / НЕ ПЕРЕЗАПУСКАТЬ в игре "угадай число" (польз)
+# help_8 = False   # пользователь не вводит макс. число в игре "угадай число" (комп)
+# help_9 = False   # пользователь при угадывании вводит не число в игре "угадай число" (польз)
+# help_10 = False   # пользователь не ввел ДА / НЕТ  в навыке "погода"
+# help_11 = False   # пользователь на выбрал тип данных в навыке "погода"
+# help_12 = False   # пользователь на выбрал время прогноза в навыке "погода"
+# help_13 = False   # пользователь на выбрал время прогноза в навыке "погода"
+# help_14 = True   # "для начала работы напишите "начать""
 
-decision = False  # выбран навык "помочь принять решение"
-form_procc = True  # идет формирование списка предлагаеных вариантов
-
-weather_fl = False  # выбран навык "погода"
-city_fl_pr = False  # идет поиск города
-w_weather = False  # выбраны "данные о погоде"
-w_time = False  # выбраны "данные о времени"
-this_moment = False  # выбрана погода на "данный момент"
-certain_time = False  # выбрана погода на "определенное время"
-
-help_1 = False   # пользователь не ввел один из 3 возможных навыков
-help_2 = False   # пользователь не ввел название одной из 3 возможных игр
-help_3 = False   # пользователь не ввел ДА / НЕТ / СТОП в навыке "решение"
-help_4 = False   # пользователь не ввел Я / ВЫ / СТОП в игре "угадай число"
-help_5 = False   # пользователь не ввел ДА / НЕТ / в игре "угадай число" (польз)
-help_6 = False   # пользователь не ввел БОЛЬШЕ / МЕНЬШЕ / РАВНО в игре "угадай число" (польз)
-help_7 = False   # пользователь не ПЕРЕЗАПУСТИТЬ / НЕ ПЕРЕЗАПУСКАТЬ в игре "угадай число" (польз)
-help_8 = False   # пользователь не вводит макс. число в игре "угадай число" (комп)
-help_9 = False   # пользователь при угадывании вводит не число в игре "угадай число" (польз)
-help_10 = False   # пользователь не ввел ДА / НЕТ  в навыке "погода"
-help_11 = False   # пользователь на выбрал тип данных в навыке "погода"
-help_12 = False   # пользователь на выбрал время прогноза в навыке "погода"
-help_13 = False   # пользователь на выбрал время прогноза в навыке "погода"
-
-id_d = {}   # flag, game_flag, number_game, words_game, rps_game, useful_flag
-            # form_procc, weather_fl, city_fl_pr, w_weather, w_time, this_moment
-            # certain_time, help_1, help_2
+id_d = {'id': 'flag'}
 
 
 def main(not_first=False, vk=None, event=None):
-    global flag, flag_play, id_user, help_1, help_2, help_3, help_4, help_5, \
+    global flag, flag_play, id_d, help_1, help_2, help_3, help_4, help_5, \
         help_6, help_7, help_8, help_9, help_10, help_11, help_12, help_13
 
-    number_game = False  # выбрана числовая игра
-    words_game = False  # выбрана игра в слова
-    rps_game = False  # выбрана игра "камень-ножницы-бумага"
-
-    decision = False  # выбран навык "помочь принять решение"
-    form_procc = True  # идет формирование списка предлагаеных вариантов
-
-    weather_fl = False  # выбран навык "погода"
-    city_fl_pr = False  # идет поиск города
-    w_weather = False  # выбраны "данные о погоде"
-    w_time = False  # выбраны "данные о времени"
-    this_moment = False  # выбрана погода на "данный момент"
-    certain_time = False  # выбрана погода на "определенное время"
-
     if not_first:
-        vk.messages.send(user_id=id_user,
+        id_d[event.obj.message['from_id']] = {'flag': True, 'flag_play': False,
+                                              'number_game': False,
+                                              'numb_gm_ii': False,
+                                              'find_highest': False,
+                                              'numb_gm_polz': False,
+                                              'words_game': False,
+                                              'rps_game': False,
+                                              'decision': False,
+                                              'form_procc': True,
+                                              'weather_fl': False,
+                                              'city_fl_pr': False,
+                                              'w_weather': False,
+                                              'w_time': False,
+                                              'this_moment': False,
+                                              'certain_time': False,
+                                              'help': [True, False, False,
+                                                       False, False, False,
+                                                       False, False, False,
+                                                       False, False, False,
+                                                       False, False]}
+        vk.messages.send(user_id=event.obj.message['from_id'],
                          message="Вот что я могу:\n"
                                  "Игры\n"\
                                  "Погода\n"\
                                  "Помочь принять решение",
-                         # attachment=random.choice(attachment_ph_d['hi']),
                          keyboard=open('keyboard_menu.json', 'r', encoding='UTF-8').read(),
                          random_id=random.randint(0, 2 ** 64))
 
     for event in longpoll.listen():
         vk = vk_session.get_api()
-        # if event.obj.message['from_id'] not in id_d.keys():
-        #     id_d[event.obj.message['from_id']] = []
-        #     print(event.obj.message['from_id'])
-
-
+        if event.type == VkBotEventType.MESSAGE_NEW and\
+                event.obj.message['from_id'] not in id_d.keys():
+            id_d[event.obj.message['from_id']] = {'flag': False, 'flag_play': False,
+                                              'number_game': False,
+                                              'numb_gm_ii': False,
+                                              'find_highest': False,
+                                              'numb_gm_polz': False,
+                                              'words_game': False,
+                                              'rps_game': False,
+                                              'decision': False,
+                                              'form_procc': True,
+                                              'weather_fl': False,
+                                              'city_fl_pr': False,
+                                              'w_weather': False,
+                                              'w_time': False,
+                                              'this_moment': False,
+                                              'certain_time': False,
+                                              'help': [False, False, False,
+                                                       False, False, False,
+                                                       False, False, False,
+                                                       False, False, False,
+                                                       False, True]}
+            print(event.obj.message['from_id'])
+            print(id_d)
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].lower() == 'начать' and not flag:
-            id_user = event.obj.message['from_id']
-            flag = True
+            'text'].lower() == 'начать' and not id_d[event.obj.message['from_id']]['flag']:
+            id_d[event.obj.message['from_id']]['flag'] = True
 
-            help_1 = True
+            id_d[event.obj.message['from_id']]['help'][13] = False
+            id_d[event.obj.message['from_id']]['help'][0] = True
 
             print(event)
             print('Новое сообщение:')
@@ -106,13 +114,14 @@ def main(not_first=False, vk=None, event=None):
                              random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and 'игр' in \
-                event.obj.message['text'].lower() and flag:
-            flag_play = True
-            number_game = False
-            numb_gm_ii, numb_gm_polz = False, False
+                event.obj.message['text'].lower() and id_d[event.obj.message['from_id']]['flag']:
+            id_d[event.obj.message['from_id']]['flag_play'] = True
+            id_d[event.obj.message['from_id']]['number_game'] = False
+            id_d[event.obj.message['from_id']]['numb_gm_ii'] = False
+            id_d[event.obj.message['from_id']]['numb_gm_polz'] = False
 
-            help_1 = False
-            help_2 = True
+            id_d[event.obj.message['from_id']]['help'][0] = False
+            id_d[event.obj.message['from_id']]['help'][1] = True
 
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Можем поиграть в:\n"
@@ -126,11 +135,15 @@ def main(not_first=False, vk=None, event=None):
                              random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '1' and flag and flag_play and not(number_game or rps_game or words_game):
-            rps_game = True
+            'text'] == '1' and id_d[event.obj.message['from_id']]['flag'] \
+                and id_d[event.obj.message['from_id']]['flag_play'] and \
+                not(id_d[event.obj.message['from_id']]['number_game'] or
+                    id_d[event.obj.message['from_id']]['rps_game'] or
+                    id_d[event.obj.message['from_id']]['words_game']):
+            id_d[event.obj.message['from_id']]['rps_game'] = True
 
-            help_2 = False
-            vk.messages.send(user_id=id_user,
+            id_d[event.obj.message['from_id']]['help'][1] = False
+            vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Название: Камень-ножницы-бумага"
                                      "Сейчас пойдет отсчет до 5 и на цифре пять " 
                                      "Вам нужно отправить:"
@@ -145,12 +158,16 @@ def main(not_first=False, vk=None, event=None):
                              keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and flag_play \
-                and rps_game and not(number_game and words_game):
+        elif event.type == VkBotEventType.MESSAGE_NEW and \
+                id_d[event.obj.message['from_id']]['flag_play']\
+                and id_d[event.obj.message['from_id']]['rps_game'] and not\
+                (id_d[event.obj.message['from_id']]['number_game'] and
+                 id_d[event.obj.message['from_id']]['words_game']):
             if event.obj.message['text'].lower() == 'да':
                 rock_paper_scissors(vk, event)
             elif event.obj.message['text'].lower() == 'нет':
-                main(True, vk)
+                id_d[event.obj.message['from_id']]['help'][0] = True
+                main(True, vk, event)
             else:
                 text = "Для продолжения напишите ДА\n" \
                        "Если не хотите играть - НЕТ"
@@ -161,36 +178,45 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '3' and flag and flag_play and not(number_game or rps_game or words_game):
-            words_game = True
+            'text'] == '3' and id_d[event.obj.message['from_id']]['flag'] and \
+                id_d[event.obj.message['from_id']]['flag_play'] and not\
+                (id_d[event.obj.message['from_id']]['number_game'] or
+                 id_d[event.obj.message['from_id']]['rps_game'] or
+                 id_d[event.obj.message['from_id']]['words_game']):
+            id_d[event.obj.message['from_id']]['words_game'] = True
 
-            help_2 = False
-            vk.messages.send(user_id=id_user,
-                             message="Название: Игра в слова\n"
-                                     "Правила очень просты! Вы называете любое слово,\n"
-                                     "а я называю слово, первая буква которого совпадает с"
-                                     " последней буквой Вашего слова.\n"
-                                     "Если названо слово, заканчивающееся на Й, Ы, Ъ, Ь,\n"
-                                     " следующему игроку нужно придумать слово на предпоследню"
-                                     " букву.\n"
-                                     "Слова в процессе однного кона игры не должны повторяться.\n"
-                                     "Нельзя использовать имена прилагательные и имена собственные.\n"   
-                                     "Для продолжения напишите ДА\n"
-                                     "Если не хотите играть - НЕТ\n"
-                                     "Если во время игры Вы не знаете слово"
-                                     " или надоело играть - напишите СДАЮСЬ",
+            id_d[event.obj.message['from_id']]['help'][1] = False
+            text = "Название: Игра в слова\n"\
+                   "Правила очень просты! Вы называете любое слово,\n"\
+                   "а я называю слово, первая буква которого совпадает с"\
+                   " последней буквой Вашего слова.\n"\
+                   "Если названо слово, заканчивающееся на Й, Ы, Ъ, Ь,\n"\
+                   " следующему игроку нужно придумать слово на предпоследню"\
+                   " букву.\n"\
+                   "Слова в процессе однного кона игры не должны повторяться.\n"\
+                   "Нельзя использовать имена прилагательные и имена собственные.\n"   \
+                   "Для продолжения напишите ДА\n"\
+                   "Если не хотите играть - НЕТ\n"\
+                   "Если во время игры Вы не знаете слово"\
+                   " или надоело играть - напишите СДАЮСЬ"
+            vk.messages.send(user_id=event.obj.message['from_id'],
+                             message=text,
                              attachment=random.choice(attachment_ph_d['words']),
                              keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and flag_play \
-                and words_game and not (number_game and rps_game):
+        elif event.type == VkBotEventType.MESSAGE_NEW and \
+                id_d[event.obj.message['from_id']]['flag_play'] \
+                and id_d[event.obj.message['from_id']]['words_game'] and not (
+                id_d[event.obj.message['from_id']]['number_game'] and
+                 id_d[event.obj.message['from_id']]['rps_game']):
             if event.type == VkBotEventType.MESSAGE_NEW and \
                     event.obj.message['text'].lower() == 'да':
-                slova(vk)
+                slova(vk, event)
             elif event.type == VkBotEventType.MESSAGE_NEW and \
                     event.obj.message['text'].lower() == 'нет':
-                main(True, vk)
+                id_d[event.obj.message['from_id']]['help'][0] = True
+                main(True, vk, event)
             else:
                 text = "Для продолжения напишите ДА\n" \
                        "Если не хотите играть - НЕТ"
@@ -201,11 +227,15 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'] == '2' and flag and flag_play and not(number_game or rps_game or words_game):
-            number_game = True
+            'text'] == '2' and id_d[event.obj.message['from_id']]['flag'] and \
+                id_d[event.obj.message['from_id']]['flag_play'] and not(
+                id_d[event.obj.message['from_id']]['number_game'] or
+                id_d[event.obj.message['from_id']]['rps_game'] or
+                id_d[event.obj.message['from_id']]['words_game']):
+            id_d[event.obj.message['from_id']]['number_game'] = True
 
-            help_2 = False
-            help_4 = True
+            id_d[event.obj.message['from_id']]['help'][1] = False
+            id_d[event.obj.message['from_id']]['help'][3] = True
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Название: Угадай число\n"
                                      "Один из нас - Я или ВЫ - загадывает число от 1 до 999.\n"
@@ -219,25 +249,34 @@ def main(not_first=False, vk=None, event=None):
                              random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and \
-                ((event.obj.message['text'].lower() == 'я' and flag and number_game) or \
+                ((event.obj.message['text'].lower() == 'я' and
+                  id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['number_game'] ) or
                  (event.obj.message['text'].lower() in ["перезапустить", "не перезапускать"]
-                  and flag and number_game and numb_gm_polz) or
-                 (event.obj.message['text'].lower() == "стоп" and flag and number_game)):
-            help_4 = False
-            help_7 = False
+                  and id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['number_game'] and
+                  id_d[event.obj.message['from_id']]['numb_gm_polz']) or
+                 (event.obj.message['text'].lower() == "стоп" and
+                  id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['number_game'] )):
+            id_d[event.obj.message['from_id']]['help'][3] = False
+            id_d[event.obj.message['from_id']]['help'][6] = False
 
-            numb_gm_polz = True
-            numb_gm_p_cl = NumberGamePolz(number_game, numb_gm_polz, True)
+            id_d[event.obj.message['from_id']]['numb_gm_polz'] = True
+            numb_gm_p_cl = NumberGamePolz(id_d[event.obj.message['from_id']]['number_game'],
+                                          id_d[event.obj.message['from_id']]['numb_gm_polz'],
+                                          True)
 
             if event.obj.message['text'].lower() in ["не перезапускать", "стоп"]:
-                number_game, numb_gm_polz = False, False
-                help_1 = True
-                main(True, vk)
+                id_d[event.obj.message['from_id']]['number_game'] = False
+                id_d[event.obj.message['from_id']]['numb_gm_polz'] = False
+                id_d[event.obj.message['from_id']]['help'][0] = True
+                main(True, vk, event)
             else:
                 text = "Хорошо. Загадывайте число.\n" \
                        "Загадали? ДА / НЕТ"
 
-                help_5 = True
+                id_d[event.obj.message['from_id']]['help'][4] = True
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
@@ -245,7 +284,10 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].lower() in ['нет', 'да'] and flag and number_game and numb_gm_polz:
+            'text'].lower() in ['нет', 'да'] and \
+                id_d[event.obj.message['from_id']]['flag'] and \
+                id_d[event.obj.message['from_id']]['number_game'] and \
+                id_d[event.obj.message['from_id']]['numb_gm_polz']:
             if event.obj.message['text'].lower() == 'нет':
 
                 text = "Ладно, я могу подождать.\n" \
@@ -258,8 +300,8 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
             else:
-                help_5 = False
-                help_6 = True
+                id_d[event.obj.message['from_id']]['help'][4] = False
+                id_d[event.obj.message['from_id']]['help'][5] = True
 
                 text = "Хорошо. Начинаю угадывать\n"
 
@@ -272,12 +314,15 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].lower() in ['больше', 'меньше', 'равно'] and flag \
-                and number_game and numb_gm_polz:
+            'text'].lower() in ['больше', 'меньше', 'равно'] and \
+                id_d[event.obj.message['from_id']]['flag'] \
+                and id_d[event.obj.message['from_id']]['number_game'] and \
+                id_d[event.obj.message['from_id']]['numb_gm_polz']:
             if numb_gm_p_cl.minim < numb_gm_p_cl.maxim - 1:
 
-                help_6, help_7, text = numb_gm_p_cl.numb_game_plz_func \
-                    (event.obj.message['text'].lower())
+                id_d[event.obj.message['from_id']]['help'][5], \
+                id_d[event.obj.message['from_id']]['help'][6], \
+                text = numb_gm_p_cl.numb_game_plz_func(event.obj.message['text'].lower())
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
@@ -291,26 +336,36 @@ def main(not_first=False, vk=None, event=None):
                                  attachment=random.choice(attachment_ph_d['fail']),
                                  random_id=random.randint(0, 2 ** 64))
         elif event.type == VkBotEventType.MESSAGE_NEW and \
-                ((event.obj.message[
-                      'text'].lower() == 'вы' and flag and number_game) or \
+                ((event.obj.message['text'].lower() == 'вы'
+                  and id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['number_game'] ) or
                  (event.obj.message['text'].lower() in ["перезапустить",
                                                         "не перезапускать", "стоп"]
-                  and flag and number_game and numb_gm_ii) or
-                 (event.obj.message['text'].lower() == "стоп" and flag and number_game)):
-            help_4 = False
-            help_7 = False
+                  and id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['number_game'] and
+                  id_d[event.obj.message['from_id']]['numb_gm_ii']) or
+                 (event.obj.message['text'].lower() == "стоп" and
+                  id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['number_game'] )):
+            id_d[event.obj.message['from_id']]['help'][3] = False
+            id_d[event.obj.message['from_id']]['help'][6] = False
 
-            numb_gm_ii = True
-            find_highest = False
+            id_d[event.obj.message['from_id']]['numb_gm_ii'] = True
+            id_d[event.obj.message['from_id']]['find_highest'] = False
 
-            numb_gm_ii_cl = NumberGameII(number_game, numb_gm_ii, find_highest, False)
+            numb_gm_ii_cl = NumberGameII(id_d[event.obj.message['from_id']]['number_game'],
+                                         id_d[event.obj.message['from_id']]['numb_gm_ii'],
+                                         id_d[event.obj.message['from_id']]['find_highest'],
+                                         False)
 
             if event.obj.message['text'].lower() in ["не перезапускать", "стоп"]:
-                number_game, numb_gm_ii, find_highest = False, False, False
-                help_1 = True
-                main(True, vk)
+                id_d[event.obj.message['from_id']]['number_game'], \
+                id_d[event.obj.message['from_id']]['numb_gm_ii'], \
+                id_d[event.obj.message['from_id']]['find_highest'] = False, False, False
+                id_d[event.obj.message['from_id']]['help'][0] = True
+                main(True, vk, event)
             else:
-                help_8 = True
+                id_d[event.obj.message['from_id']]['help'][7] = True
                 text = "Введите максимальное число, которое мне можно загадать\n" \
                        "Минимальное число - 0"
 
@@ -319,36 +374,43 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].isdigit() and flag and number_game and numb_gm_ii:
-            help_8 = False
+            'text'].isdigit() and id_d[event.obj.message['from_id']]['flag'] \
+                and id_d[event.obj.message['from_id']]['number_game'] and \
+                id_d[event.obj.message['from_id']]['numb_gm_ii']:
+            id_d[event.obj.message['from_id']]['help'][7] = False
 
-            if not find_highest:
-                number_game, numb_gm_polz, find_highest, help_9, text = numb_gm_ii_cl. \
-                    highest(event.obj.message['text'].lower())
-                print(number_game)
-                print(numb_gm_polz)
-                print(find_highest)
-                print(text)
+            if not id_d[event.obj.message['from_id']]['find_highest']:
+                id_d[event.obj.message['from_id']]['number_game'], \
+                id_d[event.obj.message['from_id']]['numb_gm_polz'], \
+                id_d[event.obj.message['from_id']]['find_highest'], \
+                id_d[event.obj.message['from_id']]['help'][8], text = \
+                    numb_gm_ii_cl.highest(event.obj.message['text'].lower())
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
                                  random_id=random.randint(0, 2 ** 64))
             else:
 
-                text, help_9, help_7 = numb_gm_ii_cl.numb_game_ii_func(event.obj.message['text'].lower())
+                text, id_d[event.obj.message['from_id']]['help'][8], \
+                id_d[event.obj.message['from_id']]['help'][6] = \
+                    numb_gm_ii_cl.numb_game_ii_func(event.obj.message['text'].lower())
 
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
                                  random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and 'решение' in event.obj.message[
-            'text'].lower() and flag and form_procc and not(number_game and words_game and rps_game):
+            'text'].lower() and id_d[event.obj.message['from_id']]['flag'] and \
+                id_d[event.obj.message['from_id']]['form_procc'] and not(
+                id_d[event.obj.message['from_id']]['number_game'] and
+                id_d[event.obj.message['from_id']]['words_game'] and
+                 id_d[event.obj.message['from_id']]['rps_game'] ):
 
-            help_1 = False
-            help_3 = True
+            id_d[event.obj.message['from_id']]['help'][0] = False
+            id_d[event.obj.message['from_id']]['help'][2] = True
 
-            decision = True
-            form_procc = True
+            id_d[event.obj.message['from_id']]['decision'] = True
+            id_d[event.obj.message['from_id']]['form_procc'] = True
             kit = []
 
             vk.messages.send(user_id=event.obj.message['from_id'],
@@ -357,33 +419,36 @@ def main(not_first=False, vk=None, event=None):
                                      "предметов, которую Вы назовёте.\n"
                                      "Нужна такая помощь? ДА / НЕТ\n"
                                      "Напишите СТОП - если хотите завершить навык\n",
-                             # attachment=random.choice(attachment_ph_d['choice']),
                              keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                              random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and \
                 ((event.obj.message['text'].lower() in [
                     'нет', 'да', "перезапустить", "не перезапускать", "стоп"]
-                  and flag and decision and form_procc) or
-                 (event.obj.message['text'].lower() == "стоп" and flag and
-                  decision and not form_procc)):
-            help_3 = False
+                  and id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['decision'] and
+                  id_d[event.obj.message['from_id']]['form_procc']) or
+                 (event.obj.message['text'].lower() == "стоп" and
+                  id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['decision'] and
+                  not id_d[event.obj.message['from_id']]['form_procc'])):
+            id_d[event.obj.message['from_id']]['help'][2] = False
             if event.obj.message['text'].lower() in ['нет', "не перезапускать", "стоп"]:
 
                 text = "Ладно...А я ведь просто хотел помочь."
 
-                decision = False
-                form_procc = True
-                help_1 = True
+                id_d[event.obj.message['from_id']]['decision'] = False
+                id_d[event.obj.message['from_id']]['form_procc'] = True
+                id_d[event.obj.message['from_id']]['help'][0] = True
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
                                  attachment=random.choice(attachment_ph_d['sad']),
                                  random_id=random.randint(0, 2 ** 64))
 
-                main(True, vk)
+                main(True, vk, event)
 
             else:
-                form_procc = False
+                id_d[event.obj.message['from_id']]['form_procc'] = False
                 kit = []
                 text = f"Ура, ура, ура! Я с радостью Вам помогу.\n" \
                        "Отдельными сообщениями введите все элементы последовательности, из которой" \
@@ -394,10 +459,11 @@ def main(not_first=False, vk=None, event=None):
                                  attachment=random.choice(attachment_ph_d['choice']),
                                  random_id=random.randint(0, 2 ** 64))
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and flag \
-                and decision and not form_procc and event.obj.message[
-            'text'].lower() == "выбирай":
-            form_procc = True
+        elif event.type == VkBotEventType.MESSAGE_NEW and id_d[event.obj.message['from_id']]['flag'] \
+                and id_d[event.obj.message['from_id']]['decision'] and \
+                not id_d[event.obj.message['from_id']]['form_procc'] and \
+                event.obj.message['text'].lower() == "выбирай":
+            id_d[event.obj.message['from_id']]['form_procc'] = True
 
             vk.messages.send(user_id=event.obj.message['from_id'],
                              message=f"Думаю, что {random.choice(kit)} - "
@@ -405,24 +471,30 @@ def main(not_first=False, vk=None, event=None):
                                      "Напишите мне -  ПЕРЕЗАПУСТИТЬ навык / НЕ ПЕРЕЗАПУСКАТЬ",
                              random_id=random.randint(0, 2 ** 64))
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and flag and decision and not form_procc:
-            print(event.obj.message['text'].lower())
-
+        elif event.type == VkBotEventType.MESSAGE_NEW and \
+                id_d[event.obj.message['from_id']]['flag'] and \
+                id_d[event.obj.message['from_id']]['decision'] and not \
+                id_d[event.obj.message['from_id']]['form_procc']:
             kit.append(event.obj.message['text'])
-            print(kit)
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and not decision and \
-                (('погод' in event.obj.message['text'].lower() and flag and not weather_fl)
-                 or (event.obj.message['text'].lower() and flag and weather_fl and city_fl_pr)
-                 or (event.obj.message['text'].lower() == 'стоп' and flag and weather_fl)):
+        elif event.type == VkBotEventType.MESSAGE_NEW and \
+                not id_d[event.obj.message['from_id']]['decision'] and \
+                (('погод' in event.obj.message['text'].lower() and
+                  id_d[event.obj.message['from_id']]['flag'] and
+                  not id_d[event.obj.message['from_id']]['weather_fl'])
+                 or (event.obj.message['text'].lower() and
+                     id_d[event.obj.message['from_id']]['flag'] and
+                     id_d[event.obj.message['from_id']]['weather_fl']
+                     and id_d[event.obj.message['from_id']]['city_fl_pr'])
+                 or (event.obj.message['text'].lower() == 'стоп' and
+                     id_d[event.obj.message['from_id']]['flag'] and
+                     id_d[event.obj.message['from_id']]['weather_fl'])):
 
-            help_1 = False
+            id_d[event.obj.message['from_id']]['help'][0] = False
 
-            if not weather_fl:
-                weather_fl = True
-
-                # weather_cl = Weather(city_fl)
-                city_fl_pr = True
+            if not id_d[event.obj.message['from_id']]['weather_fl']:
+                id_d[event.obj.message['from_id']]['weather_fl'] = True
+                id_d[event.obj.message['from_id']]['city_fl_pr'] = True
 
                 text = "С радостью Вам помогу! Назовите название города, данные " \
                        "для которого Вы хотели бы получить.\n" \
@@ -434,11 +506,11 @@ def main(not_first=False, vk=None, event=None):
                                  random_id=random.randint(0, 2 ** 64))
 
             elif event.obj.message['text'].lower() == "стоп":
-                weather_fl = False
-                city_fl_pr = False
-                w_weather = False
-                w_time = False
-                help_1 = True
+                id_d[event.obj.message['from_id']]['weather_fl'] = False
+                id_d[event.obj.message['from_id']]['city_fl_pr'] = False
+                id_d[event.obj.message['from_id']]['w_weather'] = False
+                id_d[event.obj.message['from_id']]['w_time'] = False
+                id_d[event.obj.message['from_id']]['help'][0] = True
 
                 text = "Ладно...А я ведь просто хотел помочь."
 
@@ -446,9 +518,9 @@ def main(not_first=False, vk=None, event=None):
                                  message=text,
                                  attachment=random.choice(attachment_ph_d['sad']),
                                  random_id=random.randint(0, 2 ** 64))
-                main(True, vk)
+                main(True, vk, event)
             else:
-                if city_fl_pr:
+                if id_d[event.obj.message['from_id']]['city_fl_pr']:
                     city = event.obj.message['text'].lower()
 
                     city_cl = Cities(city)
@@ -456,8 +528,8 @@ def main(not_first=False, vk=None, event=None):
                     if len(city_cl.search(city)) == 3:
 
                         long, latt, city = city_cl.search(city)
-                        city_fl_pr = False
-                        help_10 = True
+                        id_d[event.obj.message['from_id']]['city_fl_pr'] = False
+                        id_d[event.obj.message['from_id']]['help'][9] = True
 
                         text = f"Вы хотите получить данные о городе {city}?\n"\
                             "ДА или НЕТ\n"
@@ -474,18 +546,20 @@ def main(not_first=False, vk=None, event=None):
                                          random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
-            'text'].lower()in ['да', 'нет'] and flag and weather_fl and not city_fl_pr:
-            help_10 = False
+            'text'].lower()in ['да', 'нет'] and id_d[event.obj.message['from_id']]['flag'] \
+                and id_d[event.obj.message['from_id']]['weather_fl'] and \
+                not id_d[event.obj.message['from_id']]['city_fl_pr']:
+            id_d[event.obj.message['from_id']]['help'][9] = False
 
             if event.obj.message['text'].lower() == 'да':
-                city_fl_pr = False
-                help_11 = True
+                id_d[event.obj.message['from_id']]['city_fl_pr'] = False
+                id_d[event.obj.message['from_id']]['help'][10] = True
 
                 text = f"Какие данные Вы бы хотели получить для города {city}?\n" \
                     "Данные о погоде(1)\n" \
                     "Данные о времени(2)\n"
             else:
-                city_fl_pr = True
+                id_d[event.obj.message['from_id']]['city_fl_pr'] = True
                 text = "Повторите ввод названия города"
 
             vk.messages.send(user_id=event.obj.message['from_id'],
@@ -493,11 +567,15 @@ def main(not_first=False, vk=None, event=None):
                              random_id=random.randint(0, 2 ** 64))
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message['text']\
-                in ['1', '2'] and flag and weather_fl and not city_fl_pr and not w_weather and not w_time:
-            help_11 = False
+                in ['1', '2'] and id_d[event.obj.message['from_id']]['flag'] and \
+                id_d[event.obj.message['from_id']]['weather_fl'] and \
+                not id_d[event.obj.message['from_id']]['city_fl_pr'] and \
+                not id_d[event.obj.message['from_id']]['w_weather'] and \
+                not id_d[event.obj.message['from_id']]['w_time']:
+            id_d[event.obj.message['from_id']]['help'][10] = False
             if event.obj.message['text'] == "1":
-                w_weather = True
-                help_12 = True
+                id_d[event.obj.message['from_id']]['w_weather'] = True
+                id_d[event.obj.message['from_id']]['help'][11] = True
 
                 text = "Прогноз погоды на:\n" \
                        "Данный момент (1)\n" \
@@ -508,29 +586,44 @@ def main(not_first=False, vk=None, event=None):
                                  attachment=random.choice(attachment_ph_d['weather']),
                                  random_id=random.randint(0, 2 ** 64))
             else:
-                help_1 = True
-                w_time = True
+                id_d[event.obj.message['from_id']]['help'][0] = True
+                id_d[event.obj.message['from_id']]['w_time'] = True
 
-                weather_cl = Weather(city, False, latt, long, w_weather)
+                weather_cl = Weather(city, False, latt, long, id_d[event.obj.message['from_id']]['w_weather'])
                 text = weather_cl.response_d('')
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
                                  random_id=random.randint(0, 2 ** 64))
-                main(True, vk)
+                main(True, vk, event)
 
-        elif event.type == VkBotEventType.MESSAGE_NEW and ((event.obj.message[
-            'text'] in ['1', '2'] and flag and weather_fl and not city_fl_pr and \
-                w_weather and not w_time and not this_moment and not certain_time) or (event.obj.message[
-            'text'] in ['1', '2', '3', '4'] and flag and weather_fl and not city_fl_pr and \
-                w_weather and not w_time and (this_moment or certain_time))):
+        elif event.type == VkBotEventType.MESSAGE_NEW and \
+                ((event.obj.message['text'] in ['1', '2'] and
+                  id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['weather_fl'] and
+                  not id_d[event.obj.message['from_id']]['city_fl_pr'] and \
+                id_d[event.obj.message['from_id']]['w_weather'] and
+                  not id_d[event.obj.message['from_id']]['w_time'] and
+                  not id_d[event.obj.message['from_id']]['this_moment'] and
+                  not id_d[event.obj.message['from_id']]['certain_time']) or
+                 (event.obj.message['text'] in ['1', '2', '3', '4'] and
+                  id_d[event.obj.message['from_id']]['flag'] and
+                  id_d[event.obj.message['from_id']]['weather_fl'] and
+                  not id_d[event.obj.message['from_id']]['city_fl_pr'] and \
+                id_d[event.obj.message['from_id']]['w_weather'] and
+                  not id_d[event.obj.message['from_id']]['w_time'] and
+                  (id_d[event.obj.message['from_id']]['this_moment'] or
+                   id_d[event.obj.message['from_id']]['certain_time']))):
 
-            if event.obj.message['text'] == '1' and not certain_time:
-                help_12 = False
-                help_1 = True
-                if not this_moment:
-                    this_moment = True
+            if event.obj.message['text'] == '1' and \
+                    not id_d[event.obj.message['from_id']]['certain_time']:
+                id_d[event.obj.message['from_id']]['help'][11] = False
+                id_d[event.obj.message['from_id']]['help'][0] = True
+                if not id_d[event.obj.message['from_id']]['this_moment']:
+                    id_d[event.obj.message['from_id']]['this_moment'] = True
 
-                weather_cl = Weather(city, this_moment, latt, long, w_weather)
+                weather_cl = Weather(city, id_d[event.obj.message['from_id']]['this_moment'],
+                                     latt, long,
+                                     id_d[event.obj.message['from_id']]['w_weather'])
 
                 text = weather_cl.response_d('')
 
@@ -539,16 +632,19 @@ def main(not_first=False, vk=None, event=None):
                                      attachment=random.choice(attachment_ph_d['weather']),
                                      random_id=random.randint(0, 2 ** 64))
 
-                main(True, vk)
-            if (event.obj.message['text'] == '2') or (certain_time and event.obj
-                    .message['text'] in ['1', '2', '3', '4']):
-                help_12 = False
-                help_13 = True
-                if not certain_time:
-                    this_moment = False
-                    certain_time = True
+                main(True, vk, event)
+            if (event.obj.message['text'] == '2') or \
+                    (id_d[event.obj.message['from_id']]['certain_time'] and
+                     event.obj.message['text'] in ['1', '2', '3', '4']):
+                id_d[event.obj.message['from_id']]['help'][11] = False
+                id_d[event.obj.message['from_id']]['help'][12] = True
+                if not id_d[event.obj.message['from_id']]['certain_time']:
+                    id_d[event.obj.message['from_id']]['this_moment'] = False
+                    id_d[event.obj.message['from_id']]['certain_time'] = True
 
-                    weather_cl = Weather(city, this_moment, latt, long, w_weather)
+                    weather_cl = Weather(city, id_d[event.obj.message['from_id']]['this_moment'],
+                                         latt, long,
+                                         id_d[event.obj.message['from_id']]['w_weather'])
 
                     text = weather_cl.response_d('')
 
@@ -557,12 +653,14 @@ def main(not_first=False, vk=None, event=None):
                                      attachment=random.choice(attachment_ph_d['weather']),
                                      random_id=random.randint(0, 2 ** 64))
                 else:
-                    help_13 = False
-                    help_1 = True
-                    weather_cl = Weather(city, this_moment, latt, long, w_weather)
+                    id_d[event.obj.message['from_id']]['help'][12] = False
+                    id_d[event.obj.message['from_id']]['help'][0] = True
+                    weather_cl = Weather(city, id_d[event.obj.message['from_id']]['this_moment'],
+                                         latt, long,
+                                         id_d[event.obj.message['from_id']]['w_weather'])
 
                     text_1, text_2 = weather_cl.response_d(event.obj.message['text'])
-                    print(weather_cl.response_d(event.obj.message['text']))
+                    # print(weather_cl.response_d(event.obj.message['text']))
 
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=text_1,
@@ -570,116 +668,131 @@ def main(not_first=False, vk=None, event=None):
                     vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=text_2,
                                      random_id=random.randint(0, 2 ** 64))
-                    main(True, vk)
-
-        elif event.type == VkBotEventType.MESSAGE_NEW and not flag:
-            vk.messages.send(user_id=event.obj.message['from_id'],
-                             message="Для начала работы напишите 'Начать'",
-                             random_id=random.randint(0, 2 ** 64))
-
+                    main(True, vk, event)
         else:
-            if help_1 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Выберите один из навыков:\n" \
-                       "Игры\n"\
-                       "Погода\n"\
-                       "Помочь принять решение",
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 # attachment=random.choice(
-                                 #     attachment_ph_d['game']),
-                                 keyboard=open('keyboard_play.json', 'r',
-                                               encoding='UTF-8').read(),
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_2 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Выберите игру:\n" \
-                       "Камень-ножницы-бумага(1)\n"\
-                       "Угадай число(2)\n"\
-                       "Слова(3)\n"\
-                       "Чтобы выбрать, напиши цифру в скобках"
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 keyboard=open('keyboard_play.json', 'r',
-                                               encoding='UTF-8').read(),
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_3 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Вам нужна помощь с принятием решения?\n" \
-                       "Напишите ДА / НЕТ\n" \
-                       "Напишите СТОП - если хотите завершить навык\n"
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 keyboard=open('keyboard_y_n.json', 'r',
-                                               encoding='UTF-8').read(),
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_4 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Выберите, кто загадывает число: Я или ВЫ?\n"\
-                       "Напишите СТОП - если хотите завершить игру\n"
+            if event.type == VkBotEventType.MESSAGE_NEW:
+                if id_d[event.obj.message['from_id']]:
+                    print('ok')
+                    if id_d[event.obj.message['from_id']]['help'][0] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Выберите один из навыков:\n" \
+                               "Игры\n" \
+                               "Погода\n" \
+                               "Помочь принять решение",
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         # attachment=random.choice(
+                                         #     attachment_ph_d['game']),
+                                         keyboard=open('keyboard_play.json', 'r',
+                                                       encoding='UTF-8').read(),
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][1] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Выберите игру:\n" \
+                               "Камень-ножницы-бумага(1)\n" \
+                               "Угадай число(2)\n" \
+                               "Слова(3)\n" \
+                               "Чтобы выбрать, напиши цифру в скобках"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         keyboard=open('keyboard_play.json', 'r',
+                                                       encoding='UTF-8').read(),
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][2] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Вам нужна помощь с принятием решения?\n" \
+                               "Напишите ДА / НЕТ\n" \
+                               "Напишите СТОП - если хотите завершить навык\n"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         keyboard=open('keyboard_y_n.json', 'r',
+                                                       encoding='UTF-8').read(),
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][3] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Выберите, кто загадывает число: Я или ВЫ?\n" \
+                               "Напишите СТОП - если хотите завершить игру\n"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_5 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Вы загадали число? ДА / НЕТ"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][4] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Вы загадали число? ДА / НЕТ"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_6 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Введите БОЛЬШЕ, МЕНЬШЕ или РАВНО"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][5] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Введите БОЛЬШЕ, МЕНЬШЕ или РАВНО"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_7 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Напишите мне -  ПЕРЕЗАПУСТИТЬ игру / НЕ ПЕРЕЗАПУСКАТЬ"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][6] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Напишите мне -  ПЕРЕЗАПУСТИТЬ игру / НЕ ПЕРЕЗАПУСКАТЬ"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_8 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Введите максимальное число, которое мне можно загадать\n" \
-                       "Минимальное число - 0"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][7] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Введите максимальное число, которое мне можно загадать\n" \
+                               "Минимальное число - 0"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_9 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Введите число, которое думаете, я загадал\n"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][8] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Введите число, которое думаете, я загадал\n"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_10 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Введите ДА или НЕТ\n"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][9] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Введите ДА или НЕТ\n"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_11 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Выберите тип данных: \n"\
-                       "Данные о погоде(1)\n" \
-                       "Данные о времени(2)\n"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][10] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Выберите тип данных: \n" \
+                               "Данные о погоде(1)\n" \
+                               "Данные о времени(2)\n"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_12 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Выберите время желаемого прогноза погоды:\n" \
-                       "Данный момент (1)\n" \
-                       "Определенное время (2)\n"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][11] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Выберите время желаемого прогноза погоды:\n" \
+                               "Данный момент (1)\n" \
+                               "Определенное время (2)\n"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
-            elif help_13 and event.type == VkBotEventType.MESSAGE_NEW:
-                text = "Выберите время желаемого прогноза погоды:\n" \
-                       "Утро(1)\n"\
-                       "День(2)\n"\
-                       "Вечер(3)\n"\
-                       "Ночь(4)\n"
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif id_d[event.obj.message['from_id']]['help'][12] \
+                            and event.type == VkBotEventType.MESSAGE_NEW:
+                        text = "Выберите время желаемого прогноза погоды:\n" \
+                               "Утро(1)\n" \
+                               "День(2)\n" \
+                               "Вечер(3)\n" \
+                               "Ночь(4)\n"
 
-                vk.messages.send(user_id=event.obj.message['from_id'],
-                                 message=text,
-                                 random_id=random.randint(0, 2 ** 64))
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message=text,
+                                         random_id=random.randint(0, 2 ** 64))
+                    elif event.type == VkBotEventType.MESSAGE_NEW and \
+                            id_d[event.obj.message['from_id']]['help'][13]:
+                        vk.messages.send(user_id=event.obj.message['from_id'],
+                                         message="Для начала работы напишите 'Начать'",
+                                         random_id=random.randint(0, 2 ** 64))
 
 
 
@@ -746,10 +859,10 @@ class NumberGameII:
         self.help7 = False
 
     def highest(self, answ):
-        print(f"do {answ}")
+        # print(f"do {answ}")
         self.high = int(answ)
         self.numb_ii = random.randint(0, int(int(answ)))
-        print(self.numb_ii)
+        # print(self.numb_ii)
         text = "Всё, я загадал число\n" \
                "Можете угадывать"
         self.find_h = True
@@ -757,7 +870,7 @@ class NumberGameII:
         return self.number_game_fl, self.number_game_ii, self.find_h, self.help9, text
 
     def numb_game_ii_func(self, answ):
-        print(int(answ))
+        # print(int(answ))
         if int(answ) <= self.high and int(answ) >= 0:
             if int(answ) > self.numb_ii:
                 text = "Не угадали. Мое число меньше."
@@ -781,8 +894,8 @@ class NumberGameII:
         return text, self.help9, self.help7
 
 
-def restart_game(vk, game_name):
-    vk.messages.send(user_id=id_user,
+def restart_game(vk, game_name, event):
+    vk.messages.send(user_id=event.obj.message['from_id'],
                      message="Еще раз?",
                      keyboard=open('keyboard_y_n.json', 'r', encoding='UTF-8').read(),
                      random_id=random.randint(0, 2 ** 64))
@@ -792,7 +905,7 @@ def restart_game(vk, game_name):
             game_name(vk, event)
         elif event.type == VkBotEventType.MESSAGE_NEW and \
                 event.obj.message['text'].lower() != 'да':
-            main(True, vk)
+            main(True, vk, event)
 
 
 def letters_slova(word, proverka=False):
@@ -808,68 +921,68 @@ def letters_slova(word, proverka=False):
 
 def rock_paper_scissors(vk, event):
     sp = ['ножницы', 'камень', 'бумага']
-    vk.messages.send(user_id=id_user,
+    vk.messages.send(user_id=event.obj.message['from_id'],
                      message="Отсчёт пошел",
                      keyboard=open('keyboard_k_n_b.json', 'r', encoding='UTF-8').read(),
                      random_id=random.randint(0, 2 ** 64))
     for i in range(1, 6):
-        vk.messages.send(user_id=id_user,
+        vk.messages.send(user_id=event.obj.message['from_id'],
                          message=f"{i}",
                          random_id=random.randint(0, 2 ** 64))
         time.sleep(1)
     slov = sp[random.randint(0, 2)]
-    vk.messages.send(user_id=id_user,
+    vk.messages.send(user_id=event.obj.message['from_id'],
                      message=slov,
                      random_id=random.randint(0, 2 ** 64))
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             if event.obj.message['text'].lower() == slov:
-                vk.messages.send(user_id=id_user,
+                vk.messages.send(user_id=event.obj.message['from_id'],
                                  message="Ничья\n",
                                  attachment=random.choice(attachment_ph_d['draw']),
                                  random_id=random.randint(0, 2 ** 64))
-                restart_game(vk, rock_paper_scissors)
+                restart_game(vk, rock_paper_scissors, event)
             elif (event.obj.message['text'].lower() == 'ножницы' and slov == 'бумага') or (
                     event.obj.message['text'].lower() == 'камень' and slov == 'ножницы') or (
                     event.obj.message['text'].lower() == 'бумага' and slov == 'камень'):
-                vk.messages.send(user_id=id_user,
+                vk.messages.send(user_id=event.obj.message['from_id'],
                                  message="Вы выиграли\n",
                                  attachment=random.choice(attachment_ph_d['win']),
                                  random_id=random.randint(0, 2 ** 64))
-                restart_game(vk, rock_paper_scissors)
+                restart_game(vk, rock_paper_scissors, event)
             elif (event.obj.message['text'].lower() == 'бумага' and slov == 'ножницы') or (
                     event.obj.message['text'].lower() == 'ножницы' and slov == 'камень') or (
                     event.obj.message['text'].lower() == 'камень' and slov == 'бумага'):
-                vk.messages.send(user_id=id_user,
+                vk.messages.send(user_id=event.obj.message['from_id'],
                                  message="Вы проиграли\n",
                                  attachment=attachment_ph_d['fail'],
                                  random_id=random.randint(0, 2 ** 64))
-                restart_game(vk, rock_paper_scissors)
-            vk.messages.send(user_id=id_user,
+                restart_game(vk, rock_paper_scissors, event)
+            vk.messages.send(user_id=event.obj.message['from_id'],
                              message="Такого знака нет",
                              random_id=random.randint(0, 2 ** 64))
-            restart_game(vk, rock_paper_scissors)
+            restart_game(vk, rock_paper_scissors, event)
 
 
-def slova(vk):
+def slova(vk, event):
     slova_flag = False
     slova_flag1 = True
     sp_slov_user = []
     slovarik_slov_copy = slovarik_slov.copy()
-    vk.messages.send(user_id=id_user,
+    vk.messages.send(user_id=event.obj.message['from_id'],
                      message='Вы начинайте',
                      random_id=random.randint(0, 2 ** 64))
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             if event.obj.message['text'].lower() == 'сдаюсь':
-                vk.messages.send(user_id=id_user,
+                vk.messages.send(user_id=event.obj.message['from_id'],
                                  message="Ура, Ура, Ура, я выиграл",
                                  random_id=random.randint(0, 2 ** 64))
-                main(True, vk)
+                main(True, vk, event)
             else:
                 if slova_flag:
                     if letters_slova(i) != letters_slova(event.obj.message['text'].lower(), True):
-                        vk.messages.send(user_id=id_user,
+                        vk.messages.send(user_id=event.obj.message['from_id'],
                                          message="Слово не подходит",
                                          random_id=random.randint(0, 2 ** 64))
                         slova_flag1 = False
@@ -878,20 +991,20 @@ def slova(vk):
                 if slova_flag1:
                     letter = letters_slova(event.obj.message['text'].lower())
                     if letter == '0' or event.obj.message['text'].lower() in sp_slov_user:
-                        vk.messages.send(user_id=id_user,
+                        vk.messages.send(user_id=event.obj.message['from_id'],
                                          message="Слово не подходит",
                                          random_id=random.randint(0, 2 ** 64))
                     else:
                         sp_slov_user.append(event.obj.message['text'].lower())
                         if len(slovarik_slov_copy[letter]) == 0:
-                            vk.messages.send(user_id=id_user,
+                            vk.messages.send(user_id=event.obj.message['from_id'],
                                              message="Я сдаюсь, вы выиграли",
                                              random_id=random.randint(0, 2 ** 64))
-                            main(True, vk)
+                            main(True, vk, event)
                         index = random.randint(0, len(slovarik_slov_copy[letter]) - 1)
                         sl = slovarik_slov_copy[letter][index]
                         i = slovarik_slov_copy[letter].pop(index)
-                        vk.messages.send(user_id=id_user,
+                        vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=f"{sl}\n"
                                                  f"Вам на букву {letters_slova(sl)}",
                                          random_id=random.randint(0, 2 ** 64))
@@ -973,7 +1086,7 @@ class Weather:
                        f"Часовой пояс:  {self.time_d['tzinfo']} {json_response['info']['tzinfo']['name']}\n"\
                        f"Явление полярной ночи в городе:\n"\
                        f"Временя года: \n"
-                print(json_response['now_dt'])
+                # print(json_response['now_dt'])
                 if json_response['fact']['polar']:
                     polar_txt = 'да'
                 else:
