@@ -105,7 +105,7 @@ def main(not_first=False, vk=None, event=None):
             print('Для меня от:', event.obj.message['from_id'])
             print('Текст:', event.obj.message['text'])
             vk.messages.send(user_id=event.obj.message['from_id'],
-                             message="Привет я бот(название бота)\n"
+                             message="Привет я бот ЯЛ\n"
                                      "и вот что я могу:\n"
                                      "Игры\n"
                                      "Погода\n"
