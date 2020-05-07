@@ -15,20 +15,20 @@ flag_play = False
 slovarik_slov = addition.slovarik_slov_add
 attachment_ph_d = addition.attachment_ph_d_add
 
-# help_1 = False   # пользователь не ввел один из 3 возможных навыков
-# help_2 = False   # пользователь не ввел название одной из 3 возможных игр
-# help_3 = False   # пользователь не ввел ДА / НЕТ / СТОП в навыке "решение"
-# help_4 = False   # пользователь не ввел Я / ВЫ / СТОП в игре "угадай число"
-# help_5 = False   # пользователь не ввел ДА / НЕТ / в игре "угадай число" (польз)
-# help_6 = False   # пользователь не ввел БОЛЬШЕ / МЕНЬШЕ / РАВНО в игре "угадай число" (польз)
-# help_7 = False   # пользователь не ПЕРЕЗАПУСТИТЬ / НЕ ПЕРЕЗАПУСКАТЬ в игре "угадай число" (польз)
-# help_8 = False   # пользователь не вводит макс. число в игре "угадай число" (комп)
-# help_9 = False   # пользователь при угадывании вводит не число в игре "угадай число" (польз)
-# help_10 = False   # пользователь не ввел ДА / НЕТ  в навыке "погода"
-# help_11 = False   # пользователь на выбрал тип данных в навыке "погода"
-# help_12 = False   # пользователь на выбрал время прогноза в навыке "погода"
-# help_13 = False   # пользователь на выбрал время прогноза в навыке "погода"
-# help_14 = True   # "для начала работы напишите "начать""
+help_1 = False   # пользователь не ввел один из 3 возможных навыков
+help_2 = False   # пользователь не ввел название одной из 3 возможных игр
+help_3 = False   # пользователь не ввел ДА / НЕТ / СТОП в навыке "решение"
+help_4 = False   # пользователь не ввел Я / ВЫ / СТОП в игре "угадай число"
+help_5 = False   # пользователь не ввел ДА / НЕТ / в игре "угадай число" (польз)
+help_6 = False   # пользователь не ввел БОЛЬШЕ / МЕНЬШЕ / РАВНО в игре "угадай число" (польз)
+help_7 = False   # пользователь не ПЕРЕЗАПУСТИТЬ / НЕ ПЕРЕЗАПУСКАТЬ в игре "угадай число" (польз)
+help_8 = False   # пользователь не вводит макс. число в игре "угадай число" (комп)
+help_9 = False   # пользователь при угадывании вводит не число в игре "угадай число" (польз)
+help_10 = False   # пользователь не ввел ДА / НЕТ  в навыке "погода"
+help_11 = False   # пользователь на выбрал тип данных в навыке "погода"
+help_12 = False   # пользователь на выбрал время прогноза в навыке "погода"
+help_13 = False   # пользователь на выбрал время прогноза в навыке "погода"
+help_14 = True   # "для начала работы напишите "начать""
 
 id_d = {'id': 'flag'}
 
@@ -478,7 +478,8 @@ def main(not_first=False, vk=None, event=None):
             kit.append(event.obj.message['text'])
 
         elif event.type == VkBotEventType.MESSAGE_NEW and \
-                not id_d[event.obj.message['from_id']]['decision'] and \
+                not id_d[event.obj.message['from_id']]['decision']\
+                and not id_d[event.obj.message['from_id']]['flag_play']and \
                 (('погод' in event.obj.message['text'].lower() and
                   id_d[event.obj.message['from_id']]['flag'] and
                   not id_d[event.obj.message['from_id']]['weather_fl'])
@@ -973,7 +974,10 @@ def slova(vk, event):
                 main(True, vk, event)
             else:
                 if slova_flag:
-                    if letters_slova(i) != letters_slova(event.obj.message['text'].lower(), True):
+                    if letters_slova(i) != letters_slova(event.obj.message['text'].lower(), True) \
+                            or str(pymorphy2.MorphAnalyzer().parse(
+                        event.obj.message['text'].lower())[0].methods_stack[0][0]) != '<DictionaryAnalyzer>'\
+                            or pymorphy2.MorphAnalyzer().parse(event.obj.message['text'].lower())[0].tag.POS != 'NOUN':
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message="Слово не подходит",
                                          random_id=random.randint(0, 2 ** 64))
@@ -982,7 +986,10 @@ def slova(vk, event):
                         slova_flag1 = True
                 if slova_flag1:
                     letter = letters_slova(event.obj.message['text'].lower())
-                    if letter == '0' or event.obj.message['text'].lower() in sp_slov_user:
+                    if letter == '0' or event.obj.message['text'].lower() in \
+                            sp_slov_user or str(pymorphy2.MorphAnalyzer().parse(
+                        event.obj.message['text'].lower())[0].methods_stack[0][0]) != '<DictionaryAnalyzer>'\
+                            or pymorphy2.MorphAnalyzer().parse(event.obj.message['text'].lower())[0].tag.POS != 'NOUN':
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message="Слово не подходит",
                                          random_id=random.randint(0, 2 ** 64))
