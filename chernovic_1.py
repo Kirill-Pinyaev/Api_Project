@@ -677,6 +677,7 @@ def main(not_first=False, vk=None, event=None):
 
                         long, latt, city = city_cl.search(city)
                         city_fl_pr = False
+                        help_10 = True
 
                         text = f"Вы хотите получить данные о городе {city}?\n"\
                             "ДА или НЕТ\n"
@@ -694,9 +695,11 @@ def main(not_first=False, vk=None, event=None):
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message[
             'text'].lower()in ['да', 'нет'] and flag and weather_fl and not city_fl_pr:
+            help_10 = False
 
             if event.obj.message['text'].lower() == 'да':
                 city_fl_pr = False
+                help_11 = True
 
                 text = f"Какие данные Вы бы хотели получить для города {city}?\n" \
                     "Данные о погоде(1)\n" \
@@ -711,8 +714,10 @@ def main(not_first=False, vk=None, event=None):
 
         elif event.type == VkBotEventType.MESSAGE_NEW and event.obj.message['text']\
                 in ['1', '2'] and flag and weather_fl and not city_fl_pr and not w_weather and not w_time:
+            help_11 = False
             if event.obj.message['text'] == "1":
                 w_weather = True
+                help_12 = True
 
                 text = "Прогноз погоды на:\n" \
                        "Данный момент (1)\n" \
@@ -723,6 +728,7 @@ def main(not_first=False, vk=None, event=None):
                                  attachment=random.choice(attachment_ph_d['weather']),
                                  random_id=random.randint(0, 2 ** 64))
             else:
+                help_1 = True
                 w_time = True
 
                 weather_cl = Weather(city, False, latt, long, w_weather)
@@ -739,20 +745,25 @@ def main(not_first=False, vk=None, event=None):
                 w_weather and not w_time and (this_moment or certain_time))):
 
             if event.obj.message['text'] == '1' and not certain_time:
+                help_12 = False
+                help_1 = True
                 if not this_moment:
                     this_moment = True
-                else:
-                    weather_cl = Weather(city, this_moment, latt, long, w_weather)
 
-                    text = weather_cl.response_d('')
+                weather_cl = Weather(city, this_moment, latt, long, w_weather)
 
-                    vk.messages.send(user_id=event.obj.message['from_id'],
+                text = weather_cl.response_d('')
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
                                      message=text,
                                      attachment=random.choice(attachment_ph_d['weather']),
                                      random_id=random.randint(0, 2 ** 64))
-                    main(True, vk)
+
+                main(True, vk)
             if (event.obj.message['text'] == '2') or (certain_time and event.obj
                     .message['text'] in ['1', '2', '3', '4']):
+                help_12 = False
+                help_13 = True
                 if not certain_time:
                     this_moment = False
                     certain_time = True
@@ -766,6 +777,8 @@ def main(not_first=False, vk=None, event=None):
                                      attachment=random.choice(attachment_ph_d['weather']),
                                      random_id=random.randint(0, 2 ** 64))
                 else:
+                    help_13 = False
+                    help_1 = True
                     weather_cl = Weather(city, this_moment, latt, long, w_weather)
 
                     text_1, text_2 = weather_cl.response_d(event.obj.message['text'])
@@ -855,6 +868,39 @@ def main(not_first=False, vk=None, event=None):
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message=text,
                                  random_id=random.randint(0, 2 ** 64))
+            elif help_10 and event.type == VkBotEventType.MESSAGE_NEW:
+                text = "Введите ДА или НЕТ\n"
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+            elif help_11 and event.type == VkBotEventType.MESSAGE_NEW:
+                text = "Выберите тип данных: \n"\
+                       "Данные о погоде(1)\n" \
+                       "Данные о времени(2)\n"
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+            elif help_12 and event.type == VkBotEventType.MESSAGE_NEW:
+                text = "Выберите время желаемого прогноза погоды:\n" \
+                       "Данный момент (1)\n" \
+                       "Определенное время (2)\n"
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+            elif help_13 and event.type == VkBotEventType.MESSAGE_NEW:
+                text = "Выберите время желаемого прогноза погоды:\n" \
+                       "Утро(1)\n"\
+                       "День(2)\n"\
+                       "Вечер(3)\n"\
+                       "Ночь(4)\n"
+
+                vk.messages.send(user_id=event.obj.message['from_id'],
+                                 message=text,
+                                 random_id=random.randint(0, 2 ** 64))
+
 
 
 class NumberGamePolz:
