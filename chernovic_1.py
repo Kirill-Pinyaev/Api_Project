@@ -723,8 +723,6 @@ def main(not_first=False, vk=None, event=None):
                                "Помочь принять решение",
                         vk.messages.send(user_id=event.obj.message['from_id'],
                                          message=text,
-                                         # attachment=random.choice(
-                                         #     attachment_ph_d['game']),
                                          keyboard=open('keyboard_play.json', 'r',
                                                        encoding='UTF-8').read(),
                                          random_id=random.randint(0, 2 ** 64))
@@ -936,22 +934,26 @@ class NumberGameII:
                 text = "Не угадали. Мое число меньше."
                 self.help9 = True
                 self.help7 = False
+                keyboard = ''
             elif int(answ) < self.numb_ii:
                 text = "Не угадали. Мое число больше."
                 self.help9 = True
                 self.help7 = False
+                keyboard = ''
             else:
                 text = f"Ура ! Вы угадали, мое число {self.numb_ii}.\n" \
                        "Напишите мне -  ПЕРЕЗАПУСТИТЬ игру / НЕ ПЕРЕЗАПУСКАТЬ"
                 self.help9 = False
                 self.help7 = True
+                keyboard = open('keyboard_strat_notstart.json', 'r')
 
         else:
             text = "Точно нет...Вы сами себе противоречите...\n" \
                    f"Загадано число от 0 до {self.high}"
             self.help9 = False
             self.help7 = True
-        return text, self.help9, self.help7
+            keyboard = ''
+        return text, self.help9, self.help7, keyboard
 
 
 def restart_game(vk, game_name, event):
@@ -1015,7 +1017,7 @@ def rock_paper_scissors(vk, event):
                     event.obj.message['text'].lower() == 'камень' and slov == 'бумага'):
                 vk.messages.send(user_id=event.obj.message['from_id'],
                                  message="Вы проиграли\n",
-                                 attachment=attachment_ph_d['fail'],
+                                 attachment=random.choice(attachment_ph_d['fail']),
                                  random_id=random.randint(0, 2 ** 64))
                 restart_game(vk, rock_paper_scissors, event)
             vk.messages.send(user_id=event.obj.message['from_id'],
