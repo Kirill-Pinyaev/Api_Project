@@ -4,14 +4,14 @@
         [{
             "action": {
                 "type": "text",
-                "label": "Перезапустить"
+                "label": "ВЫБИРАЙ"
             },
           "color": "positive"
         },
           {
             "action": {
                 "type": "text",
-                "label": "Не перезапускать"
+                "label": "СТОП"
             },
           "color": "negative"
           }]

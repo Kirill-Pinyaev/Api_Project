@@ -2,32 +2,32 @@
   "one_time": true,
   "buttons": [
         [{
-            "action": {
+          "action": {
                 "type": "text",
-                "label": "Игры"
+                "label": "Утро"
             },
           "color": "positive"
         },
           {
-            "action": {
+          "action": {
                 "type": "text",
-                "label": "Погода"
+                "label": "День"
             },
           "color": "positive"
-          },
+        },{
+          "action": {
+                "type": "text",
+                "label": "Вечер"
+            },
+          "color": "positive"
+        },
           {
-            "action": {
+          "action": {
                 "type": "text",
-                "label": "Время"
+                "label": "Ночь"
             },
           "color": "positive"
-          },
-          {
-            "action": {
-                "type": "text",
-                "label": "Решение"
-            },
-          "color": "positive"
-          }]
+        }
+           ]
     ]
 }

@@ -4,14 +4,21 @@
         [{
             "action": {
                 "type": "text",
-                "label": "Перезапустить"
+                "label": "Я"
             },
           "color": "positive"
         },
           {
             "action": {
                 "type": "text",
-                "label": "Не перезапускать"
+                "label": "Вы"
+            },
+          "color": "positive"
+          },
+        {
+            "action": {
+                "type": "text",
+                "label": "Стоп"
             },
           "color": "negative"
           }]

@@ -4,14 +4,21 @@
         [{
             "action": {
                 "type": "text",
-                "label": "О погоде"
+                "label": "БОЛЬШЕ"
             },
           "color": "positive"
         },
           {
             "action": {
                 "type": "text",
-                "label": "О времени"
+                "label": "МЕНЬШЕ"
+            },
+          "color": "positive"
+          },
+          {
+            "action": {
+                "type": "text",
+                "label": "РАВНО"
             },
           "color": "positive"
           }]

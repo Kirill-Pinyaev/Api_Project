@@ -4,14 +4,14 @@
         [{
             "action": {
                 "type": "text",
-                "label": "Сейчас"
+                "label": "Данный момент"
             },
           "color": "positive"
         },
           {
             "action": {
                 "type": "text",
-                "label": "Потом"
+                "label": "Определенное время"
             },
           "color": "positive"
           }]
